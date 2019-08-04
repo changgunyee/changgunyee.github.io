@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /2019/01/02/rootall_framework.html
+Sitemap: http://changgunyee.github.io/sitemap.xml

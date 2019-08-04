@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    RootsAll Framework 구조(보안) - changgunyee
+    
+  </title>
+
+  <meta name="description"
+    content="일단 프론트의 구조입니다. NGINX를 NUXT의 reverse proxy server로 사용 장점 보안 : 서버가 털려도 proxy server가 털리기 때문에 괜찮다 로드 밸런싱 : 내부 서버를 알고 있는 proxy server가 요청 분산 가능 캐쉬처럼 사용해서 성능 향상 가...">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+      google_ad_client: "ca-pub-7578104907913978",
+      enable_page_level_ads: true
+    });
+  </script>
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+    type='text/css'>
+  <link
+    href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+    rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/fontawesome-free/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/develop/2019/01/02/rootall_framework.html">
+  <link rel="alternate" type="application/rss+xml" title="changgunyee"
+    href="/feed.xml">
+  <style>
+    body {
+      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">changgunyee</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/develop">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+<header class="masthead"
+  style="background-image: url('/img/develop.jpg')">
+  
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>RootsAll Framework 구조(보안)</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">이창권</a>
+              on January 02, 2019
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 mx-auto">
+
+        <p>일단 프론트의 구조입니다.</p>
+
+<p>NGINX를  NUXT의 reverse proxy server로 사용
+장점</p>
+<ol>
+  <li>보안 : 서버가 털려도 proxy server가 털리기 때문에 괜찮다</li>
+  <li>로드 밸런싱 : 내부 서버를 알고 있는 proxy server가 요청 분산 가능</li>
+  <li>캐쉬처럼 사용해서 성능 향상 가능</li>
+</ol>
+
+<p><img src="/img/2019-01-02/1.png" alt="image" /></p>
+
+<p>두 번째로 백엔드의 구조입니다.</p>
+<ol>
+  <li>websocket : client의 요청을 받아야 server가 응답할 수 있는 http와는 다르게, client의 요청 없이도 server가 여러 client들에게 동시에 정보를 뿌릴 수 있게하는 프로토콜</li>
+  <li>channel-redis(asgi-redis의 업그레이드 버전) :  redis를 저장소로 이용하는 채널 레이어</li>
+  <li>graphQL : django 안에 설치한 어플리케이션.  postgreSQL에 쿼리를 날리기 위해 사용</li>
+  <li>redis(django-redis) : 쿼리를 캐싱하는 용도로 사용</li>
+  <li>RabbitMQ : Celery의 브로커 역할. django로부터 받은 task를 어떤 큐로 분배할지 결정.</li>
+  <li>redis vs RabbitMQ : 참조:<a href="https://www.linkedin.com/pulse/redis-vs-rabbitmq-message-broker-vishnu-kiran-k-v">https://www.linkedin.com/pulse/redis-vs-rabbitmq-message-broker-vishnu-kiran-k-v</a></li>
+  <li>Celery : 여러개의 큐로 구성됨. RabbitMQ로 부터 받은 task들을 처리</li>
+  <li>PostgreSQL : DB, 다양한 데이터 타입, 큰 용량 등등</li>
+  <li>Firebase : DB 용도로 사용(cloud firestore), subject app과 관련된 모델들을 여기에 저장<a href="https://firebase.google.com/docs/firestore/quickstart?hl=ko">https://firebase.google.com/docs/firestore/quickstart?hl=ko</a></li>
+  <li>Amazon S3 : 정적 파일과 미디어 파일을 보관해주는 AWS에서 제공하는 스토리지</li>
+  <li>boto3 : S3에 있는 파일들을 관리하게 해주는 API에 맞는 python 요청을 하게 해주는 패키지</li>
+</ol>
+
+<p><img src="/img/2019-01-02/2.PNG" alt="image" /></p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left"
+            href="/boost-course/2018/08/24/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BD%94%EC%8A%A4(%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C).html" data-toggle="tooltip"
+            data-placement="top" title="부스트코스(안드로이드) 영화 리뷰 앱">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/develop/2019/01/11/evaluation.html"
+            data-toggle="tooltip" data-placement="top" title="진단평가 사이트 기능 추가">Next<span
+              class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="comments">
+      
+  </div>
+  <script id="dsq-count-scr" src="//https-changgunyee-github-io.disqus.com/count.js" async></script>
+  <style>
+    img{
+      display:block;
+      margin:0px auto;
+      width:80%;
+    }
+  </style>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="mailto:minyoung403@naver.com">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="far fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/changgunyee">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://instagram.com/char_quen">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          <li class="list-inline-item">
+              <a href="https://www.buymeacoffee.com/changgunyee" target="_blank">
+                <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee"style="height: auto !important;width: auto !important;display:inline-block;">
+              </a>
+          </li>
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; 이창권 2019</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145057839-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-145057839-1');
+</script>
+
+</body>
+
+</html>

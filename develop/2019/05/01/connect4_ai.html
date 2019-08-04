@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    connect4게임의 AI를 만들어보자 - changgunyee
+    
+  </title>
+
+  <meta name="description"
+    content="2019 1학기 김현철 교수님의 인공지능 수업을 듣게 되었습니다. AI에 사용하는 여러가지 인공지능 기법을 배우게 되었고 그 중 min-max algorithm을 실제로 구현해 보기로 하였습니당. 간단한 게임을 선택해야할 것 같아서 connect4를 선정하게 되었습니다. 구글에 참...">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+      google_ad_client: "ca-pub-7578104907913978",
+      enable_page_level_ads: true
+    });
+  </script>
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+    type='text/css'>
+  <link
+    href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+    rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/fontawesome-free/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/develop/2019/05/01/connect4_ai.html">
+  <link rel="alternate" type="application/rss+xml" title="changgunyee"
+    href="/feed.xml">
+  <style>
+    body {
+      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">changgunyee</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/develop">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+<header class="masthead"
+  style="background-image: url('/img/develop.jpg')">
+  
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>connect4게임의 AI를 만들어보자</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">이창권</a>
+              on May 01, 2019
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 mx-auto">
+
+        <p>2019 1학기 김현철 교수님의 인공지능 수업을 듣게 되었습니다.
+AI에 사용하는 여러가지 인공지능 기법을 배우게 되었고 그 중 min-max algorithm을 실제로 구현해 보기로 하였습니당.</p>
+
+<p>간단한 게임을 선택해야할 것 같아서 connect4를 선정하게 되었습니다. 구글에 참고할 만한 자료가 많이 있는 것도 선정한 이유였습니다.
+게임 룰은 column을 선택해서 해당 column의 맨 위에 자신의 돌을 놓을 수 있습니다. 대각선이나 가로, 세로로 4개를 연속해서 채우면 이기게 됩니다.</p>
+
+<p><img src="/img/2019-05-01/Connect_Four.gif" alt="image" /></p>
+
+<p>min-max algorithm은 기본적으로 hueristic을 1개 선정합니다.
+heuristic을 이용해 나의 차례에는 내 점수가 최대가 되게 상대의 차례에는 내 점수가 최소가 되게 한다는 가정을 하고 Tree를 만들어 정해놓은 depth만큼 탐색을 해 나의 점수가 최대가 되는 노드로 돌을 두게 합니다.</p>
+
+<p>작동 방식은 아래와 이미지를 보면 이해가 더 명확합니다.</p>
+
+<p><img src="/img/2019-05-01/minmax1.png" alt="image" /></p>
+
+<p><img src="/img/2019-05-01/minmax2.gif" alt="image" /></p>
+
+<p>만든 AI가 depth를 5를 넘기면 시간이 너무 많이 걸리게 됩니다. 이때 alpha-beta pruning을 이용해서 탐색 필요가 없는 노드들은 가지치기를 해서 시간을 줄여줍니다. 가지치기를 적용하니 depth 10까지도 1분 안에 해결됩니다.</p>
+
+<p><img src="/img/2019-05-01/pruning.png" alt="image" /></p>
+
+<p>만든 connect4_ai의 github 주소는 다음과 같습니다.</p>
+
+<p><a href="https://github.com/changgunyee/connect4">https://github.com/changgunyee/connect4</a></p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left"
+            href="/develop/2019/03/26/gifted_homepage.html" data-toggle="tooltip"
+            data-placement="top" title="고려대학교 영재교육원 홈페이지 수정">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/boost-course/2019/07/10/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BD%94%EC%8A%A4(%EC%9B%B9)-proj3.html"
+            data-toggle="tooltip" data-placement="top" title="부스트 코스(웹) PROJ3-1">Next<span
+              class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="comments">
+      
+  </div>
+  <script id="dsq-count-scr" src="//https-changgunyee-github-io.disqus.com/count.js" async></script>
+  <style>
+    img{
+      display:block;
+      margin:0px auto;
+      width:80%;
+    }
+  </style>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="mailto:minyoung403@naver.com">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="far fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/changgunyee">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://instagram.com/char_quen">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          <li class="list-inline-item">
+              <a href="https://www.buymeacoffee.com/changgunyee" target="_blank">
+                <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee"style="height: auto !important;width: auto !important;display:inline-block;">
+              </a>
+          </li>
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; 이창권 2019</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145057839-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-145057839-1');
+</script>
+
+</body>
+
+</html>

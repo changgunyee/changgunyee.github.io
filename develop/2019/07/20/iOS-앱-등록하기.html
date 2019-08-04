@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    react native로 iOS 앱 개발하고 등록하기 - changgunyee
+    
+  </title>
+
+  <meta name="description"
+    content="react-native로 앱을 만들고 등록하는 과정중의 에러나 힘들었던 사항들을 정리하였습니다. Xcode로 iOS개발 시 빌드 방법(Error처리 포함) Build전 수행해야할 사항 npm install --save : node_modules directory생성 (후에 pod에...">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+      google_ad_client: "ca-pub-7578104907913978",
+      enable_page_level_ads: true
+    });
+  </script>
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+    type='text/css'>
+  <link
+    href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+    rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/fontawesome-free/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/develop/2019/07/20/iOS-%EC%95%B1-%EB%93%B1%EB%A1%9D%ED%95%98%EA%B8%B0.html">
+  <link rel="alternate" type="application/rss+xml" title="changgunyee"
+    href="/feed.xml">
+  <style>
+    body {
+      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">changgunyee</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/develop">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+<header class="masthead"
+  style="background-image: url('/img/develop.jpg')">
+  
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>react native로 iOS 앱 개발하고 등록하기</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">이창권</a>
+              on July 20, 2019
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 mx-auto">
+
+        <p>react-native로 앱을 만들고 등록하는 과정중의 에러나 힘들었던 사항들을 정리하였습니다.</p>
+
+<h1 id="xcode로-ios개발-시-빌드-방법error처리-포함">Xcode로 iOS개발 시 빌드 방법(Error처리 포함)</h1>
+
+<h2 id="build전-수행해야할-사항">Build전 수행해야할 사항</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">npm install --save</code> : node_modules directory생성
+  (후에 pod에서 node_modules안의 파일을 건드리기 때문에 sudo는 쓰지말도록 합니다.)</li>
+  <li><code class="highlighter-rouge">react-native link</code> : node.js패키지를 react-native에서 쓰기 위해 native code상의 필요한 부분에 코드를 주입시켜줍니다. link 명령어를 지원하지 않거나 manual한 link방법을 추천하는 패키지도 존재하므로 패키지 별로 문서를 한번 씩 읽어보는 것도 좋습니다.(현재 사용하는 패키지에서는 다 link사용 가능)</li>
+  <li><code class="highlighter-rouge">cd ios</code>&amp;<code class="highlighter-rouge">pod install</code> : node.js package를 바로 ios에서 쓰기 위해서는 패키지 관리자를 사용하여야 하는데 이것이 pod입니다. package.json=Podfile, package-lock.jso=Podfile.lock, node_modules=Pods입니다.
+(Pod와 관련해서 에러가 난다면 Podfile.lock, Pods를 삭제 후, <code class="highlighter-rouge">pod install</code>을 합니다.)</li>
+  <li>이제 Xcode에서 .xcworkspace파일을 엽니다(Pod를 쓰기 때문에 .xcodeproj대신 .xcworkspace를 엽니다)</li>
+</ul>
+
+<h2 id="build-시-발생하는-주요-에러">Build 시 발생하는 주요 에러</h2>
+
+<ul>
+  <li>third-party와 관련되어 에러가 날 수 있습니다.(파일이 없습니다. 어쩌구 저쩌구….)
+    <ul>
+      <li>third-party에서 패키지를 제대로 설치하지 못하는 모양입니다. 수동으로 해줍시다.</li>
+      <li><code class="highlighter-rouge">cd node_modules/react-native/third-party/glog-0.3.4</code></li>
+      <li><code class="highlighter-rouge">./configure</code></li>
+      <li><code class="highlighter-rouge">make</code>&amp;<code class="highlighter-rouge">make install</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p>소스파일로 된 패키지를 설치하실 때 기본적으로 내리는 3가지 명령어가 있는데 그것이 바로
+configure, make, make install 입니다.</p>
+
+<p>여기서 소스파일이란 것은 설치파일에 대한 소스 파일입니다.
+그러므로 컴파일을 하고나면 설치파일이 생기는 것이죠. 그리고 위의 세가지 명령에 대해 알아보도록 하죠.</p>
+
+<p>configure 는 환경설정을 해주는 명령어입니다. 
+컴파일을 할 때 어떤 옵션을 넣거나 할 때 configure 뒤에 옵션을 넣어줍니다. 
+여기에 어떤 옵션이 정확히 들어간다고 말씀드릴 수 있는 것은 아니고 소스를 제작한 자가 readme 파일 등에
+명시되어 있습니다.</p>
+
+<p>make 는 소스를 컴파일 하는 것입니다. 컴파일이란 것은 소스파일을 사용자가 실행 가능한 파일로 만들어 주는
+과정을 말합니다. make 과정이 끝나고 나면 설치파일이 생성된 상태라고 볼 수 있습니다.</p>
+
+<p>make install 은 설치를 하는 과정입니다. 앞 과정에서 생성된 설치파일을 실행해서 설치를 끝내는 과정입니다.</p>
+
+<ul>
+  <li><strong>No member named ‘__rip’ in ‘__darwin_arm_thread_state64’</strong> 에러
+    <ul>
+      <li>
+        <p><code class="highlighter-rouge">ucontext_t *context = reinterpret_cast&lt;ucontext_t *&gt;(ucontext_in_void);</code></p>
+
+        <p><code class="highlighter-rouge">return (void*)context-&gt;PC_FROM_UCONTEXT; // &lt;---- build error here</code></p>
+
+        <p>를 <code class="highlighter-rouge">return NULL;</code>로 code를 직접 수정해줍니다.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="앱-등록시-reject-사유">앱 등록시 reject 사유</h2>
+<ul>
+  <li>구글 로그인 시 보안을 다 풀어두어도 새로운 핸드폰에서 로그인시 인증을 한번 거쳐야 한다. 하지만 Reviewer들은 해주지 않는다. 우리가 제공하는 계정은 가장 높은 권한을 가진 바로 로그인할 수 있어야 한다.</li>
+  <li>구글 콘솔 상에서 OAuth인증 파트에서 사용하는 API가 느낌표가 떠있으면 로그인 시에 <strong>this app is not verified</strong> 라는 것이 뜨는데, 보통의 경우에는 advanced를 눌러 진행할 수 있지만 Reviewer는 이것을 reject사유로 잡는다.</li>
+</ul>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left"
+            href="/boost-camp/2019/07/18/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%94%84-Day4.html" data-toggle="tooltip"
+            data-placement="top" title="부스트 캠프 Day4">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/boost-camp/2019/07/22/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%94%84-Day5.html"
+            data-toggle="tooltip" data-placement="top" title="부스트 캠프 Day5">Next<span
+              class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="comments">
+      
+  </div>
+  <script id="dsq-count-scr" src="//https-changgunyee-github-io.disqus.com/count.js" async></script>
+  <style>
+    img{
+      display:block;
+      margin:0px auto;
+      width:80%;
+    }
+  </style>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="mailto:minyoung403@naver.com">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="far fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/changgunyee">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://instagram.com/char_quen">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          <li class="list-inline-item">
+              <a href="https://www.buymeacoffee.com/changgunyee" target="_blank">
+                <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee"style="height: auto !important;width: auto !important;display:inline-block;">
+              </a>
+          </li>
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; 이창권 2019</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145057839-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-145057839-1');
+</script>
+
+</body>
+
+</html>
