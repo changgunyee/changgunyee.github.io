@@ -106,17 +106,15 @@
 
 <h2>1. 코드 동작 이해</h2>
 
+<p>객체를 이용한 코드 관리</p>
+
 <ul>
-  <li>
-    <p>객체를 이용한 코드 관리</p>
+  <li>각 Repository와 파일들을 객체로써 관리하였다.</li>
+  <li>init 명령어를 실행하면 new Repository를 통해 저장소를 생성하였다.</li>
+  <li>각 디렉토리 객체들은 local이라는 배열을 만들어 보관하였다.</li>
+</ul>
 
-    <ul>
-      <li>각 Repository와 파일들을 객체로써 관리하였다.</li>
-      <li>init 명령어를 실행하면 new Repository를 통해 저장소를 생성하였다.</li>
-      <li>각 디렉토리 객체들은 local이라는 배열을 만들어 보관하였다.</li>
-    </ul>
-
-    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">local</span> <span class="o">=</span> <span class="p">[];</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">local</span> <span class="o">=</span> <span class="p">[];</span>
 <span class="kd">class</span> <span class="nx">File</span> <span class="p">{</span>
   <span class="kd">constructor</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
@@ -130,36 +128,33 @@
     <span class="k">this</span><span class="p">.</span><span class="nx">files</span> <span class="o">=</span> <span class="p">[];</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div>    </div>
+</code></pre></div></div>
 
-    <ul>
-      <li>new 명령어를 실행하면 new File을 통해 파일을 생성시키고 이를 해당 Repository의 files에 push하여 관리하였다.</li>
-    </ul>
+<ul>
+  <li>new 명령어를 실행하면 new File을 통해 파일을 생성시키고 이를 해당 Repository의 files에 push하여 관리하였다.</li>
+</ul>
 
-    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">newRepo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Repository</span><span class="p">();</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">newRepo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Repository</span><span class="p">();</span>
 <span class="nx">local</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">newRepo</span><span class="p">);</span>
 <span class="kd">const</span> <span class="nx">newFile</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">File</span><span class="p">();</span>
 <span class="nx">newRepo</span><span class="p">.</span><span class="nx">files</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">newFile</span><span class="p">);</span>
-</code></pre></div>    </div>
-  </li>
-</ul>
+</code></pre></div></div>
 
 <h2>2. 코드 동작 개선</h2>
 
+<p>함수형 프로그래밍에 따라 객체를 공유해야하는 상황이 아니라면 항상 객체를 deepCopy해 새로운 객체로 생성해 작업하는 것이 낫다. 성능이 떨어지지만 에러를 미연에 방지할 수 있다.</p>
+
+<p>deepCopy하는 여러가지 방법</p>
+
 <ul>
-  <li>함수형 프로그래밍에 따라 객체를 공유해야하는 상황이 아니라면 항상 객체를 deepCopy해 새로운 객체로 생성해 작업하는 것이 낫다. 성능이 떨어지지만 에러를 미연에 방지할 수 있다.</li>
-  <li>
-    <p>deepCopy하는 여러가지 방법</p>
+  <li>객체 안에 class형의 객체가 없고, function이나 상속 받은 proto가 없이 단순한 dictionary object들을 가지고 있는 object일 경우
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">newObject</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">oldObject</span><span class="p">));</span>
+</code></pre></div>    </div>
+  </li>
+  <li>객체가 포함하는 function이나 상속받은 내용들까지 모두 copy하는 함수(vanilla js)</li>
+</ul>
 
-    <ul>
-      <li>객체 안에 class형의 객체가 없고, function이나 상속 받은 proto가 없이 단순한 dictionary object들을 가지고 있는 object일 경우
-        <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">newObject</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">oldObject</span><span class="p">));</span>
-</code></pre></div>        </div>
-      </li>
-      <li>
-        <p>객체가 포함하는 function이나 상속받은 내용들까지 모두 copy하는 함수(vanilla js)</p>
-
-        <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">deepCopy</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">deepCopy</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">obj</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">||</span> <span class="k">typeof</span> <span class="nx">obj</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">object</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
   <span class="p">}</span>
@@ -170,22 +165,19 @@
   <span class="p">}</span>
   <span class="k">return</span> <span class="nx">copy</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre></div>        </div>
-      </li>
-      <li>jQuery나 lodash와 같은 라이브러리 사용방법(제일 권장하는 방법)
-        <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// jQuery</span>
+</code></pre></div></div>
+
+<ul>
+  <li>jQuery나 lodash와 같은 라이브러리 사용방법(제일 권장하는 방법)
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// jQuery</span>
 <span class="kd">let</span> <span class="nx">copyObject</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="p">{},</span> <span class="nx">mainObject</span><span class="p">);</span>
 <span class="c1">// lodash</span>
 <span class="kd">let</span> <span class="nx">copyObject</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">(</span><span class="nx">mainObject</span><span class="p">);</span>
-</code></pre></div>        </div>
-      </li>
-      <li>참고URL : https://mygumi.tistory.com/322 [마이구미의 HelloWorld]</li>
-    </ul>
+</code></pre></div>    </div>
   </li>
 </ul>
 
 <h3 id="자신이-미션을-하면서-학습한-내용">자신이 미션을 하면서 학습한 내용</h3>
-
 <ul>
   <li>객체를 이동하거나 변경 후 새로 저장해야할 일이 있을 때, 객체를 공유해야하는 부분이 아니라면 되도록 deep copy를 통해 새로 객체를 생성하는 것이 후에 오류를 막을 수 있다.(함수형 프로그래밍)</li>
   <li>설계 시, 구현해야하는 내용에 맞는 디자인 패턴을 하나 골라 그에 따라 설계를 하는 것도 괜찮은 방법이다.</li>
@@ -193,22 +185,15 @@
 </ul>
 
 <h3 id="스스로-학습할-내용">스스로 학습할 내용</h3>
-
 <p>실제 git 명령어와 구현한 명령 동작 차이점에 대해 정리한다.</p>
-
 <ul>
-  <li>
-    <p>구현한 checkout은 저장소를 이동하지만 원래 checkout은 브랜치를 이동하는 것이다.</p>
-  </li>
-  <li>
-    <p>add명령어 시, 실제 git에서는 변경된 파일을 추적해서 <code class="highlighter-rouge">add *</code> 과 같이 변경된 모든 파일을 add할 수 있는 명령어도 존재하지만, 구현한 add명령어는 명령어 뒤에 넣은 파일이 변경되었지 않더라도 무조건 add한다.</p>
-  </li>
+  <li>구현한 checkout은 저장소를 이동하지만 원래 checkout은 브랜치를 이동하는 것이다.</li>
+  <li>add명령어 시, 실제 git에서는 변경된 파일을 추적해서 <code class="highlighter-rouge">add *</code> 과 같이 변경된 모든 파일을 add할 수 있는 명령어도 존재하지만, 구현한 add명령어는 명령어 뒤에 넣은 파일이 변경되었지 않더라도 무조건 add한다.</li>
 </ul>
 
 <h2>3. Consideration</h2>
 
 <h3 id="clone-명령을-구현하려면-어떻게-구현해야-할까">clone 명령을 구현하려면 어떻게 구현해야 할까?</h3>
-
 <ul>
   <li>각 저장소마다 각자의 remote저장소를 따로 생성한다.</li>
   <li>remote 저장소를 생성자 외에 접근할 수 있도록 권핞을 수정한다.</li>
@@ -218,7 +203,6 @@
 </ul>
 
 <h3 id="branch-개념을-추가하려면-어떤-구조로-어떻게-구현해야-할까">branch 개념을 추가하려면 어떤 구조로 어떻게 구현해야 할까?</h3>
-
 <ul>
   <li>master는 여러 branch객체를 리스트로 가지고 있다.</li>
   <li>master를 상속하는 object로 각 branch를 구현한다.</li>
@@ -227,7 +211,6 @@
 </ul>
 
 <h3 id="pull-명령을-구현하려며-어떤-구조로-어떻게-구현해야-할까">pull 명령을 구현하려며 어떤 구조로 어떻게 구현해야 할까?</h3>
-
 <ul>
   <li>pull request를 queue형태로 저장한다.</li>
   <li>FIFO방식으로 pull request의 파일을 담은 객체를 권한이 있는 사용자에게 전달한다.</li>
@@ -236,6 +219,14 @@
   <li>pull하면 기존의 객체와 새로운 객체를 반복문으로 돌려가며 변경사항을 체크한다.</li>
   <li>변경되어있으면 새로운 객체를 덮어쓴다.</li>
   <li>immutable하게 만들기 위해 객체는 new로 생성한 후 기존의 객체는 버린다.</li>
+</ul>
+
+<blockquote>
+  <p>reference</p>
+</blockquote>
+
+<ul>
+  <li>https://mygumi.tistory.com/322 [마이구미의 HelloWorld]</li>
 </ul>
 
 <!--

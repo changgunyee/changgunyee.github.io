@@ -101,181 +101,90 @@
       <div class="col-lg-10 col-md-10 mx-auto">
 
         <h1 id="논리게이트">논리게이트</h1>
-
 <p>기본 게이트와 반가산기, 전가산기, 바이트 가산기 구현</p>
-
 <h2>1. 코드 동작 이해</h2>
-
 <ul>
   <li>NAND
     <ul>
-      <li>
-        <p>NOT + AND Gate BitA, BitB의 AND연산 결과값에 반전 결과값을 제공한다.</p>
-      </li>
-      <li>
-        <p>입력값이 전부 같지 않은지를 판별하는 경우에 사용될 수 있다.</p>
-      </li>
+      <li>NOT + AND Gate BitA, BitB의 AND연산 결과값에 반전 결과값을 제공한다.</li>
+      <li>입력값이 전부 같지 않은지를 판별하는 경우에 사용될 수 있다.</li>
     </ul>
   </li>
-  <li>
-    <p>NOR</p>
-
+  <li>NOR
     <ul>
-      <li>
-        <p>Not + OR GAte BitA, BitB의 OR연산의 반전 결과값을 제공한다.</p>
-      </li>
-      <li>
-        <p>입력값이 False로만 이루어진 경우 True를 반환한다.</p>
-      </li>
+      <li>Not + OR GAte BitA, BitB의 OR연산의 반전 결과값을 제공한다.</li>
+      <li>입력값이 False로만 이루어진 경우 True를 반환한다.</li>
     </ul>
   </li>
-  <li>
-    <p>XOR</p>
-
+  <li>XOR
     <ul>
-      <li>
-        <p>입력값이 서로 다른 경우인지를 확인하는 Gate</p>
-      </li>
-      <li>
-        <p>BitA 와 BitB 가 서로 다른 경우일 경우만 True를 반환</p>
-      </li>
+      <li>입력값이 서로 다른 경우인지를 확인하는 Gate</li>
+      <li>BitA 와 BitB 가 서로 다른 경우일 경우만 True를 반환</li>
     </ul>
   </li>
-  <li>
-    <p>Half-Adder</p>
-
+  <li>Half-Adder
     <ul>
-      <li>
-        <p>반쪽자리 계산기로 두 개의 비트에 대해서 연산을 제공한다.</p>
-      </li>
-      <li>
-        <p>BitA, BitB에 대해 Carry와 Sum 인자를 제공</p>
-      </li>
-      <li>
-        <p>Carry : nand(bitA, bitB) / Sum : xor(bitA,bitB)</p>
-      </li>
+      <li>반쪽자리 계산기로 두 개의 비트에 대해서 연산을 제공한다.</li>
+      <li>BitA, BitB에 대해 Carry와 Sum 인자를 제공</li>
+      <li>Carry : nand(bitA, bitB) / Sum : xor(bitA,bitB)</li>
     </ul>
   </li>
-  <li>
-    <p>Full-Adder</p>
-
+  <li>Full-Adder
     <ul>
-      <li>
-        <p>2개의 Half-Adder로 구성된 회로</p>
-      </li>
-      <li>
-        <p>BitA, BitB, Carry 3개의 입력값을 가진다.</p>
-      </li>
-      <li>
-        <p>Carry는 이전 연산의 오버플로우 값(1bit 기준)으로 현재 연산에 영향을 끼치는 요소이다.</p>
-      </li>
-      <li>
-        <p>결과 값 Carry는 현재 입력값 중 2개 이상이 true값을 가지는 경우 True가 된다.</p>
-      </li>
-      <li>
-        <p>결과 값 Sum은 현재 입력값 중 True가 2개가 아닌경우 True가 된다.</p>
-      </li>
-      <li>
-        <p>Carry : ab + bc + ca</p>
-      </li>
-      <li>
-        <p>Sum : abc + ab<code class="highlighter-rouge">c</code> + a<code class="highlighter-rouge">bc</code> + a<code class="highlighter-rouge">b</code>c</p>
-      </li>
+      <li>2개의 Half-Adder로 구성된 회로</li>
+      <li>BitA, BitB, Carry 3개의 입력값을 가진다.</li>
+      <li>Carry는 이전 연산의 오버플로우 값(1bit 기준)으로 현재 연산에 영향을 끼치는 요소이다.</li>
+      <li>결과 값 Carry는 현재 입력값 중 2개 이상이 true값을 가지는 경우 True가 된다.</li>
+      <li>결과 값 Sum은 현재 입력값 중 True가 2개가 아닌경우 True가 된다.</li>
+      <li>Carry : ab + bc + ca</li>
+      <li>Sum : abc + ab<code class="highlighter-rouge">c</code> + a<code class="highlighter-rouge">bc</code> + a<code class="highlighter-rouge">b</code>c</li>
     </ul>
   </li>
-  <li>
-    <p>Byte(8bits) Adder</p>
-
+  <li>Byte(8bits) Adder
     <ul>
-      <li>
-        <p>초기 입력 Carry값은 false로 설정된 Full-Adder를 이용</p>
-      </li>
-      <li>
-        <p>입력값 중 8bit가 안되는 경우 Zero-Padding을 이용한다.</p>
-      </li>
+      <li>초기 입력 Carry값은 false로 설정된 Full-Adder를 이용</li>
+      <li>입력값 중 8bit가 안되는 경우 Zero-Padding을 이용한다.</li>
     </ul>
   </li>
   <li>Binary to Decimal  <br />
   ##### Case1 -  MSB가 0번 Index에 위치하는 경우
     <ul>
       <li>현재 값을 더할 pow(2,i)를 기억할 공간이 줄어든다.</li>
-      <li>이전 결과값에 2를 곱한후 현재 비트 값을 더하는 방식으로 구현</li>
-    </ul>
-
-    <p>##### case 2 - MSB가 Last Index에 위치하는 경우</p>
-    <ul>
+      <li>이전 결과값에 2를 곱한후 현재 비트 값을 더하는 방식으로 구현
+  ##### case 2 - MSB가 Last Index에 위치하는 경우</li>
       <li>현재 index의 가중치를 계산해줄 pow변수가 필요</li>
       <li>loop당 곱셈연산이 1번 추가된다.</li>
       <li>사용자기준에서는 읽기 편하다는 장점이 있다.</li>
     </ul>
   </li>
-  <li>
-    <p>Decimal to Binary</p>
-
+  <li>Decimal to Binary
     <ul>
-      <li>
-        <p>이전 값에 2로 나눈 나머지 값을 저장하는 방식</p>
-      </li>
-      <li>
-        <p>Mod 연산 이후 현재 값을 2로 나눈 정수값을 다음 입력값으로 사용</p>
-      </li>
-      <li>
-        <p>입력값이 0이 될 경우까지 반복된다.</p>
-      </li>
+      <li>이전 값에 2로 나눈 나머지 값을 저장하는 방식</li>
+      <li>Mod 연산 이후 현재 값을 2로 나눈 정수값을 다음 입력값으로 사용</li>
+      <li>입력값이 0이 될 경우까지 반복된다.</li>
     </ul>
   </li>
 </ul>
-
-<h2>2. 코드 동작 개선</h2>
-
+<h3>2. 코드 동작 개선</h3>
 <ul>
-  <li>
-    <p>두 개의 bitArray 중 길이가 긴 bitArray의 길이에 맞추어 연산을 하면 길이가 다른 2개의 bitArray가 들어와도 유연하게 처리가 가능하다.</p>
-  </li>
-  <li>
-    <p>Boolean으로 타입을 변환하는 방법 뿐만 아니라 “!!”를 통해서도 Boolean 타입으로 변경이 가능하다.</p>
-  </li>
+  <li>두 개의 bitArray 중 길이가 긴 bitArray의 길이에 맞추어 연산을 하면 길이가 다른 2개의 bitArray가 들어와도 유연하게 처리가 가능하다.</li>
+  <li>Boolean으로 타입을 변환하는 방법 뿐만 아니라 “!!”를 통해서도 Boolean 타입으로 변경이 가능하다.</li>
 </ul>
-
-<h2>3. Consideration</h2>
-
-<h3 id="바이트-순서를-큰-비트most-significant-bit를-좌측으로-배치하는-것과-우측으로-배치하는-방식이-구현할-때-어떤-장점이-있나">바이트 순서를 큰 비트(Most Significant Bit)를 좌측으로 배치하는 것과 우측으로 배치하는 방식이 구현할 때 어떤 장점이 있나?</h3>
-
+<h3>3. Consideration</h3>
+<h4 id="바이트-순서를-큰-비트most-significant-bit를-좌측으로-배치하는-것과-우측으로-배치하는-방식이-구현할-때-어떤-장점이-있나">바이트 순서를 큰 비트(Most Significant Bit)를 좌측으로 배치하는 것과 우측으로 배치하는 방식이 구현할 때 어떤 장점이 있나?</h4>
 <ul>
-  <li>
-    <p>큰 비트를 좌측으로 배치하는 것을 빅 엔디언, 우측으로 배치하는 방식을 리틀 엔디언이라고 한다.</p>
+  <li>큰 비트를 좌측으로 배치하는 것을 빅 엔디언, 우측으로 배치하는 방식을 리틀 엔디언이라고 한다.</li>
+  <li>빅엔디언은 사람이 숫자를 읽고 쓰는 방법과 같기 때문에 개발자의 소프트웨어 디버깅을 편하게 해주는 장점이 있다.</li>
+  <li>리틀 엔디언은 하위 바이트들만 사용할 때는 별도의 계산이 필요가 없고,가산기와 같은 모듈 설계시 LSB부터 시작하여 자리 올림 계산을 하기 때문에 설계가 더 쉽다는 장점이 있다.(ex. 순회시 정방향)
+    <h4 id="같은-방식으로-2진수를-16진법으로-변환하는-함수를-만든다면-어떤-구조가-될까">같은 방식으로 2진수를 16진법으로 변환하는 함수를 만든다면 어떤 구조가 될까</h4>
   </li>
-  <li>
-    <p>빅엔디언은 사람이 숫자를 읽고 쓰는 방법과 같기 때문에 개발자의 소프트웨어 디버깅을 편하게 해주는 장점이 있다.</p>
+  <li>binary를 4bit씩 묶어 10진수로 계산해 변경</li>
+  <li>2진수 -&gt; 10진수 -&gt; 16진수</li>
+  <li>16진수를 표기하기 위한 방법을 추가(10-15 -&gt; A-F)
+    <h4 id="같은-방식으로-16진수를-2진법으로-변환하는-함수를-만든다면-어떤-구조가-될까">같은 방식으로 16진수를 2진법으로 변환하는 함수를 만든다면 어떤 구조가 될까</h4>
   </li>
-  <li>
-    <p>리틀 엔디언은 하위 바이트들만 사용할 때는 별도의 계산이 필요가 없고,가산기와 같은 모듈 설계시 LSB부터 시작하여 자리 올림 계산을 하기 때문에 설계가 더 쉽다는 장점이 있다.(ex. 순회시 정방향)</p>
-  </li>
-</ul>
-
-<h3 id="같은-방식으로-2진수를-16진법으로-변환하는-함수를-만든다면-어떤-구조가-될까">같은 방식으로 2진수를 16진법으로 변환하는 함수를 만든다면 어떤 구조가 될까</h3>
-
-<ul>
-  <li>
-    <p>binary를 4bit씩 묶어 10진수로 계산해 변경</p>
-  </li>
-  <li>
-    <p>2진수 -&gt; 10진수 -&gt; 16진수</p>
-  </li>
-  <li>
-    <p>16진수를 표기하기 위한 방법을 추가(10-15 -&gt; A-F)</p>
-  </li>
-</ul>
-
-<h3 id="같은-방식으로-16진수를-2진법으로-변환하는-함수를-만든다면-어떤-구조가-될까">같은 방식으로 16진수를 2진법으로 변환하는 함수를 만든다면 어떤 구조가 될까</h3>
-
-<ul>
-  <li>
-    <p>16진수 -&gt; 10진수 -&gt; 2진수</p>
-  </li>
-  <li>
-    <p>16진수를 읽어내기 위한 방법을 추가(A-F -&gt; 10-15)</p>
-  </li>
+  <li>16진수 -&gt; 10진수 -&gt; 2진수</li>
+  <li>16진수를 읽어내기 위한 방법을 추가(A-F -&gt; 10-15)</li>
 </ul>
 
 <!--

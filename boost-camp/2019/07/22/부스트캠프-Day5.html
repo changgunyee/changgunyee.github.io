@@ -105,7 +105,6 @@
 <p>개발자가 개발환경과 디버깅방법 이해하기</p>
 
 <h2>1. 코드 동작 이해</h2>
-
 <ul>
   <li>제네레이터함수
     <ul>
@@ -142,10 +141,6 @@
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">tableData</span><span class="p">);</span> <span class="c1">// $.get()의 response 값이 tableData에 전달됨</span>
 <span class="p">});</span>
 
-
-<span class="o">--&gt;</span>
-
-
 <span class="kd">function</span> <span class="nx">getData</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// new Promise() 추가</span>
   <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
@@ -155,7 +150,6 @@
     <span class="p">});</span>
   <span class="p">});</span>
 <span class="p">}</span>
-
 <span class="c1">// getData()의 실행이 끝나면 호출되는 then()</span>
 <span class="nx">getData</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">tableData</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// resolve()의 결과 값이 여기로 전달됨</span>
@@ -173,9 +167,7 @@
     </ul>
   </li>
 </ul>
-
 <h2>2. 코드 동작 개선</h2>
-
 <ul>
   <li>git의 branch에 대해서 이해를 하고 있는가?
     <ul>
@@ -191,9 +183,7 @@
     </ul>
   </li>
 </ul>
-
 <h2>3. Consideration</h2>
-
 <ul>
   <li>각자 어떤 디버깅 방법을 사용해보았는가? 이 부분을 모두 이야기하고 적어보자.
     <ul>
@@ -203,14 +193,17 @@
   <li>프로젝트에서 npm 명령어를 활용해 추가로 외부 모듈을 설치했을때 package.json에 어떤 변화가 생기는지 설명하자.
     <ul>
       <li>dependency에 설치한 외부 모듈명과 모듈 버전이 추가된다.</li>
-      <li>이로 인해 require(“underscore”)로 호출이 가능해졌다.
-        <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-  </span><span class="nl">"underscore"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^1.9.1"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>        </div>
-      </li>
+      <li>이로 인해 require(“underscore”)로 호출이 가능해졌다.</li>
     </ul>
   </li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"underscore"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^1.9.1"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
   <li>node_modules 디렉토리는 어떤 역할을 하는 디렉토리 인가 설명해보자.
     <ul>
       <li>npm으로 다운받은 외부 모듈이 저장되는 장소</li>

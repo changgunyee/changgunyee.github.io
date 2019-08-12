@@ -13,7 +13,7 @@
   </title>
 
   <meta name="description"
-    content="할일관리 프로그램 자바스크립트에서 함수형프로그래밍과 객체지향 프로그래밍을 이용해보자 1. 코드 동작 이해 OOP 객체지향 프로그래밍이란 캡슐화, 다형성, 상속을 이용하여 코드 재사용을 증가시키고, 유지보수를 감소시키는 장점을 얻기 위해서 객체들을 연결시켜 프로그래밍 하는 기법. 객...">
+    content="할일관리 프로그램 자바스크립트에서 함수형프로그래밍과 객체지향 프로그래밍을 이용해보자 1. 코드 동작 이해 OOP란? 객체지향 프로그래밍이란 캡슐화, 다형성, 상속을 이용하여 코드 재사용을 증가시키고, 유지보수를 감소시키는 장점을 얻기 위해서 객체들을 연결시켜 프로그래밍 하는 기법....">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   <script>
         (adsbygoogle = window.adsbygoogle || []).push({
@@ -105,193 +105,184 @@
 <p>자바스크립트에서 함수형프로그래밍과 객체지향 프로그래밍을 이용해보자</p>
 
 <h2 id="1-코드-동작-이해">1. 코드 동작 이해</h2>
+
+<h4 id="oop란">OOP란?</h4>
+
+<p>객체지향 프로그래밍이란 캡슐화, 다형성, 상속을 이용하여 코드 재사용을 증가시키고, 유지보수를 감소시키는 장점을 얻기 위해서 객체들을 연결시켜 프로그래밍 하는 기법.
+객체는 속성(property)과 행위(method)를 가짐.</p>
+
+<p>OOP의 특징</p>
 <ul>
-  <li>OOP
-    <ul>
-      <li>객체지향 프로그래밍이란 캡슐화, 다형성, 상속을 이용하여 코드 재사용을 증가시키고, 유지보수를 감소시키는 장점을 얻기 위해서 객체들을 연결시켜 프로그래밍 하는 기법.</li>
-      <li>객체는 속성(property)과 행위(method)를 가짐.</li>
-      <li>OOP의 특징
-        <ul>
-          <li>추상화 : 목적과 관련이 없는 부분을 제거하여 필요한 부분만을 표현하기 위한 개념, 객체들의 공통된 특징을 파악해 정의해 놓은 설계 기법</li>
-          <li>캡슐화 : 불필요한 정보를 감출 수 있기 때문에, 정보은닉을 할 수 있다는 특징을 가짐.</li>
-          <li>상속 : 상속 관계에 있는 두 클래스에 대해, 부모 클래스가 자손 클래스에게 속성을 물려주는 것</li>
-          <li>다형성 : 같은 형태이지만 다른 기능을 하는 것.</li>
-        </ul>
-      </li>
-      <li>자바스크립트에서는?
-        <ul>
-          <li>모든 객체는 <strong>프로토타입</strong>이라는 다른 객체를 가리키는 내부 링크를 가지고 있다. 프로토 타입을 통해 직접 객체를 연결할 수 있는 데 이를 프로토타입 체인이라 하고, 이를 통해 상속을 구현할 수 있음.</li>
-          <li>자바스크립트에서의 객체 생성 방법
-            <ol>
-              <li>object literal</li>
-              <li>(ES2015) class</li>
-              <li>Object() 생성자 함수</li>
-              <li>constructor pattern</li>
-            </ol>
+  <li>추상화 : 목적과 관련이 없는 부분을 제거하여 필요한 부분만을 표현하기 위한 개념, 객체들의 공통된 특징을 파악해 정의해 놓은 설계 기법</li>
+  <li>캡슐화 : 불필요한 정보를 감출 수 있기 때문에, 정보은닉을 할 수 있다는 특징을 가짐.</li>
+  <li>상속 : 상속 관계에 있는 두 클래스에 대해, 부모 클래스가 자손 클래스에게 속성을 물려주는 것</li>
+  <li>다형성 : 같은 형태이지만 다른 기능을 하는 것.</li>
+</ul>
 
-            <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">// object literal</span>
-  <span class="kd">var</span> <span class="nx">obj1</span> <span class="o">=</span> <span class="p">{};</span>
-  <span class="nx">obj1</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Lee</span><span class="dl">'</span><span class="p">;</span>
-            
-        
-  <span class="c1">// Object() 생성자 함수</span>
-  <span class="kd">var</span> <span class="nx">obj2</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
-  <span class="nx">obj2</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Lee</span><span class="dl">'</span><span class="p">;</span>
-            
-  <span class="c1">// 생성자 함수</span>
-  <span class="kd">function</span> <span class="nx">F</span><span class="p">()</span> <span class="p">{}</span>
-  <span class="kd">var</span> <span class="nx">obj3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">F</span><span class="p">();</span>
-  <span class="nx">obj3</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Lee</span><span class="dl">'</span><span class="p">;</span>
-            
-  <span class="c1">// (ES2015) class</span>
-  <span class="kd">const</span> <span class="nx">health</span> <span class="o">=</span> <span class="kd">class</span> <span class="p">{</span>
-      <span class="kd">constructor</span><span class="p">(...)</span>
-      <span class="p">...</span>
-  <span class="p">}</span>
-</code></pre></div>            </div>
-          </li>
-          <li>prototype chain과 method 정의
-            <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">function</span> <span class="nx">person</span><span class="p">(</span><span class="nx">name</span><span class="p">){</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="nx">person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">){</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getName</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
-  <span class="p">};</span>
-  <span class="kd">var</span> <span class="nx">me</span>  <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="dl">'</span><span class="s1">Lee</span><span class="dl">'</span><span class="p">);</span>
-  <span class="kd">var</span> <span class="nx">you</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="dl">'</span><span class="s1">Kim</span><span class="dl">'</span><span class="p">);</span>
-  <span class="kd">var</span> <span class="nx">him</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="dl">'</span><span class="s1">choi</span><span class="dl">'</span><span class="p">);</span>
-
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">);</span>
-  <span class="c1">// Person { setName: [Function], getName: [Function] }</span>
-
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">me</span><span class="p">);</span>  <span class="c1">// Person { name: 'Lee' }</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">you</span><span class="p">);</span> <span class="c1">// Person { name: 'Kim' }</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">him</span><span class="p">);</span> <span class="c1">// Person { name: 'choi' }</span>
-</code></pre></div>            </div>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  <li>MVC 모델
-    <ul>
-      <li>모델-뷰-컨트롤러(Model–View–Controller, MVC)는 소프트웨어 공학에서 사용되는 <strong>소프트웨어 디자인 패턴</strong> 이다. 이 패턴을 성공적으로 사용하면, 사용자 인터페이스로부터 비즈니스 로직을 분리하여 애플리케이션의 시각적 요소나 그 이면에서 실행되는 비즈니스 로직을 서로 영향 없이 쉽게 고칠 수 있는 애플리케이션을 만들 수 있다.</li>
-      <li>모델 : 애플리케이션의 정보(데이터)를 나타낸다</li>
-      <li>뷰 : 텍스트, 체크박스 항목 등과 같은 사용자 인터페이스 요소를 나타낸다.</li>
-      <li>컨트롤러 : 데이터와 비즈니스 로직 사이의 상호동작을 관리한다.</li>
-      <li>참고 : <a href="https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8-%EB%B7%B0-%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC">https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8-%EB%B7%B0-%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC</a></li>
-    </ul>
-  </li>
-  <li>옵저버 패턴
-    <ul>
-      <li>observer pattern은 객체의 상태 변화를 관찰하는 관찰자들, 즉 옵저버들의 목록을 객체에 등록하여 상태 변화가 있을 때마다 메서드 등을 통해 객체가 직접 목록의 각 옵저버에게 통지하도록 하는 디자인 패턴</li>
-      <li>각각의 옵저버는 notify 함수를 구현함으로써 이벤트가 발생했을 때 처리할 각자의 동작을 정의해야 한다.</li>
-      <li>주체에는 일반적으로 등록(register), 제거(unregister) 메서드가 존재 임시로 작동을 멈추거나 재개하는 메서드를 이용해 이벤트가 계속해서 있을 때 홍수같이 발생하는 요청을 제어할 수도 있다.</li>
-      <li>옵저버 패턴이 많이 쓰인 시스템에서는 순환 실행을 막는 메카니즘이 필요</li>
-      <li><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Observer.svg/854px-Observer.svg.png" style="width:500px;height:300px" /></li>
-    </ul>
-  </li>
-  <li>Express 서버
-    <ul>
-      <li>Express는 웹 및 모바일 애플리케이션을 위한 일련의 강력한 기능을 제공하는 간결하고 유연한 Node.js 웹 애플리케이션 프레임워크</li>
-      <li>Node.js로 서버 개발 시, 미들웨어 구조를 이용해 손쉽게 개발하게 해준다.</li>
-      <li>
-        <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">);</span>
- <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
-
- <span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-   <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">Hello World!</span><span class="dl">'</span><span class="p">);</span>
- <span class="p">});</span>
-
- <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
-</code></pre></div>        </div>
-      </li>
-    </ul>
-  </li>
-  <li>async/await
-    <ul>
-      <li>ES7부터 도입됐으며, Promise를 더 편하게 쓸 수 있는 문법이다.</li>
-      <li>활용 예시 :
-        <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   <span class="k">async</span> <span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{</span>
-     <span class="k">try</span> <span class="p">{</span>
-       <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/no-user-here</span><span class="dl">'</span><span class="p">);</span>
-       <span class="kd">let</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
-     <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-       <span class="nx">alert</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-     <span class="p">}</span>
-   <span class="p">}</span>
-
-   <span class="nx">f</span><span class="p">();</span>
-</code></pre></div>        </div>
-      </li>
-      <li></li>
-      <li>참고 : <a href="https://javascript.info/async-await">https://javascript.info/async-await</a></li>
-    </ul>
+<p>자바스크립트에서는?</p>
+<ul>
+  <li>모든 객체는 <strong>프로토타입</strong>이라는 다른 객체를 가리키는 내부 링크를 가지고 있다. 프로토 타입을 통해 직접 객체를 연결할 수 있는 데 이를 프로토타입 체인이라 하고, 이를 통해 상속을 구현할 수 있음.</li>
+  <li>자바스크립트에서의 객체 생성 방법
+    <ol>
+      <li>object literal</li>
+      <li>(ES2015) class</li>
+      <li>Object() 생성자 함수</li>
+      <li>constructor pattern</li>
+    </ol>
   </li>
 </ul>
 
-<h2 id="2-코드-동작-개선">2. 코드 동작 개선</h2>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// object literal</span>
+<span class="kd">var</span> <span class="nx">obj1</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="nx">obj1</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Lee</span><span class="dl">'</span><span class="p">;</span>
+
+
+<span class="c1">// Object() 생성자 함수</span>
+<span class="kd">var</span> <span class="nx">obj2</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+<span class="nx">obj2</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Lee</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// 생성자 함수</span>
+<span class="kd">function</span> <span class="nx">F</span><span class="p">()</span> <span class="p">{}</span>
+<span class="kd">var</span> <span class="nx">obj3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">F</span><span class="p">();</span>
+<span class="nx">obj3</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Lee</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// (ES2015) class</span>
+<span class="kd">const</span> <span class="nx">health</span> <span class="o">=</span> <span class="kd">class</span> <span class="p">{</span>
+    <span class="kd">constructor</span><span class="p">(...)</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
 <ul>
-  <li>주어진 요구사항을 꼼꼼하게 체크하고, OOP와 모듈단위로 나눈방식의 개발방법의 장점이 무엇인지 고민한다.
+  <li>prototype chain과 method 정의</li>
+</ul>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">person</span><span class="p">(</span><span class="nx">name</span><span class="p">){</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">){</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getName</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="kd">var</span> <span class="nx">me</span>  <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="dl">'</span><span class="s1">Lee</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">you</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="dl">'</span><span class="s1">Kim</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">him</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="dl">'</span><span class="s1">choi</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">);</span>
+<span class="c1">// Person { setName: [Function], getName: [Function] }</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">me</span><span class="p">);</span>  <span class="c1">// Person { name: 'Lee' }</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">you</span><span class="p">);</span> <span class="c1">// Person { name: 'Kim' }</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">him</span><span class="p">);</span> <span class="c1">// Person { name: 'choi' }</span>
+</code></pre></div></div>
+
+<p>MVC 모델</p>
+<ul>
+  <li>모델-뷰-컨트롤러(Model–View–Controller, MVC)는 소프트웨어 공학에서 사용되는 <strong>소프트웨어 디자인 패턴</strong> 이다. 이 패턴을 성공적으로 사용하면, 사용자 인터페이스로부터 비즈니스 로직을 분리하여 애플리케이션의 시각적 요소나 그 이면에서 실행되는 비즈니스 로직을 서로 영향 없이 쉽게 고칠 수 있는 애플리케이션을 만들 수 있다.</li>
+  <li>모델 : 애플리케이션의 정보(데이터)를 나타낸다</li>
+  <li>뷰 : 텍스트, 체크박스 항목 등과 같은 사용자 인터페이스 요소를 나타낸다.</li>
+  <li>컨트롤러 : 데이터와 비즈니스 로직 사이의 상호동작을 관리한다.</li>
+  <li>참고 : <a href="https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8-%EB%B7%B0-%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC">https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8-%EB%B7%B0-%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC</a></li>
+</ul>
+
+<p>옵저버 패턴</p>
+<ul>
+  <li>observer pattern은 객체의 상태 변화를 관찰하는 관찰자들, 즉 옵저버들의 목록을 객체에 등록하여 상태 변화가 있을 때마다 메서드 등을 통해 객체가 직접 목록의 각 옵저버에게 통지하도록 하는 디자인 패턴</li>
+  <li>각각의 옵저버는 notify 함수를 구현함으로써 이벤트가 발생했을 때 처리할 각자의 동작을 정의해야 한다.</li>
+  <li>주체에는 일반적으로 등록(register), 제거(unregister) 메서드가 존재 임시로 작동을 멈추거나 재개하는 메서드를 이용해 이벤트가 계속해서 있을 때 홍수같이 발생하는 요청을 제어할 수도 있다.</li>
+  <li>옵저버 패턴이 많이 쓰인 시스템에서는 순환 실행을 막는 메카니즘이 필요</li>
+</ul>
+
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Observer.svg/854px-Observer.svg.png" /></p>
+
+<p>Express 서버</p>
+<ul>
+  <li>Express는 웹 및 모바일 애플리케이션을 위한 일련의 강력한 기능을 제공하는 간결하고 유연한 Node.js 웹 애플리케이션 프레임워크</li>
+  <li>Node.js로 서버 개발 시, 미들웨어 구조를 이용해 손쉽게 개발하게 해준다.</li>
+</ul>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">Hello World!</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>async/await</p>
+<ul>
+  <li>ES7부터 도입됐으며, Promise를 더 편하게 쓸 수 있는 문법이다.</li>
+  <li>활용 예시 :</li>
+</ul>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/no-user-here</span><span class="dl">'</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+  <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">f</span><span class="p">();</span>
+</code></pre></div></div>
+
+<ul>
+  <li>참고 : <a href="https://javascript.info/async-await">https://javascript.info/async-await</a></li>
+</ul>
+
+<h2 id="2-코드-동작-개선">2. 코드 동작 개선</h2>
+<p>주어진 요구사항을 꼼꼼하게 체크하고, OOP와 모듈단위로 나눈방식의 개발방법의 장점이 무엇인지 고민한다.</p>
+<ul>
+  <li>완전히 독립된 객체들을 만들고 그 객체를 넘겨받아 이용해주는 것이므로, 유지 보수에 장점이 있고, OOP의 주요 특징인 다형성 상속등으로 코드 재사용성이 높다.</li>
+  <li>예를들어 다른 상황에서 옵저버 패턴을 사용해주고 싶을 때 Observable.js를 사용해서 기능들을 상속받아 이용해줄 수 있을 것이다.</li>
+</ul>
+
+<p>더 개선할 부분은 없는지, 더 좋은 방식의 패턴이 없을지 고민해본다.</p>
+<ul>
+  <li>이전의 함수형 프로그래밍 같은 경우, 순수한 함수를 작성해서 공유된 사태와 변경가능한 데이터 및 부작용을 피하면서 코드 작성을 하였었다. 이러한 점에서는 이번 과제로 진행한 상태가 공유되는 객체지향과 대조된다 생각한다.</li>
+  <li>디자인 패턴 중 대표적인 <code class="highlighter-rouge">GoF 패턴</code>들에 대해서 알아보았고 더 나을지는 모르겠지만 이 중 <code class="highlighter-rouge">Command pattern</code>을 활용해줄 수 있을 것 같다는 생각을 했다.</li>
+  <li>command pattern
     <ul>
-      <li>완전히 독립된 객체들을 만들고 그 객체를 넘겨받아 이용해주는 것이므로, 유지 보수에 장점이 있고, OOP의 주요 특징인 다형성 상속등으로 코드 재사용성이 높다.</li>
-      <li>예를들어 다른 상황에서 옵저버 패턴을 사용해주고 싶을 때 Observable.js를 사용해서 기능들을 상속받아 이용해줄 수 있을 것이다.</li>
+      <li>요청을 객체로 갭슐화함으로써 서로 다른 요청으로 클라이언트를 파라미터화하고, 요청을 저장하거나 기록을 남겨서 오퍼레이션의 취소도 가능하게 한다.</li>
+      <li>또, 실행될 기능을 캡슐화함으로써 주어진 여러 기능을 실행할 수 있는 재사용성이 높은 클래스를 설계하는 패턴이다.</li>
     </ul>
-  </li>
-  <li>더 개선할 부분은 없는지, 더 좋은 방식의 패턴이 없을지 고민해본다.
+
+    <p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Command_pattern.svg/2880px-Command_pattern.svg.png" /></p>
+
     <ul>
-      <li>
-        <p>이전의 함수형 프로그래밍 같은 경우, 순수한 함수를 작성해서 공유된 사태와 변경가능한 데이터 및 부작용을 피하면서 코드 작성을 하였었다. 이러한 점에서는 이번 과제로 진행한 상태가 공유되는 객체지향과 대조된다 생각한다.</p>
-      </li>
-      <li>
-        <p>디자인 패턴 중 대표적인 <code class="highlighter-rouge">GoF 패턴</code>들에 대해서 알아보았고 더 나을지는 모르겠지만 이 중 <code class="highlighter-rouge">Command pattern</code>을 활용해줄 수 있을 것 같다는 생각을 했다.</p>
-      </li>
-      <li>command pattern
-        <ul>
-          <li>요청을 객체로 갭슐화함으로써 서로 다른 요청으로 클라이언트를 파라미터화하고, 요청을 저장하거나 기록을 남겨서 오퍼레이션의 취소도 가능하게 한다.</li>
-          <li>또, 실행될 기능을 캡슐화함으로써 주어진 여러 기능을 실행할 수 있는 재사용성이 높은 클래스를 설계하는 패턴이다.</li>
-        </ul>
-
-        <p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Command_pattern.svg/2880px-Command_pattern.svg.png" /></p>
-
-        <ul>
-          <li>이를테면 새로운 기능을 구현하려고 할때, TodoModel을 변경하지 않고 TodoModel에 새로운 기능 자체를 전달하는 식으로 디자인 한다면 TodoModel의 재사용성을 증가시키고 전체적인 확장성도 증가시킬 수 있을 것 같다.</li>
-        </ul>
-      </li>
-      <li>참고
-        <ul>
-          <li><a href="https://gmlwjd9405.github.io/2018/07/06/design-pattern.html">https://gmlwjd9405.github.io/2018/07/06/design-pattern.html</a></li>
-          <li><a href="https://gmlwjd9405.github.io/2018/07/07/command-pattern.html">https://gmlwjd9405.github.io/2018/07/07/command-pattern.html</a></li>
-          <li><a href="https://gone-sw.tistory.com/4">https://gone-sw.tistory.com/4</a></li>
-          <li><a href="https://en.wikipedia.org/wiki/Command_pattern">https://en.wikipedia.org/wiki/Command_pattern</a></li>
-        </ul>
-      </li>
+      <li>이를테면 새로운 기능을 구현하려고 할때, TodoModel을 변경하지 않고 TodoModel에 새로운 기능 자체를 전달하는 식으로 디자인 한다면 TodoModel의 재사용성을 증가시키고 전체적인 확장성도 증가시킬 수 있을 것 같다.</li>
     </ul>
   </li>
 </ul>
 
 <h2 id="3-consideration">3. Consideration</h2>
+<p>undo/redo 기능을 제공하고 싶다. 특정 사람의 코드를 골라서, 이 기능을 추가하기 위한 전략을 세워보자.</p>
 <ul>
-  <li>
-    <p>undo/redo 기능을 제공하고 싶다. 특정 사람의 코드를 골라서, 이 기능을 추가하기 위한 전략을 세워보자.</p>
-
-    <ul>
-      <li>undo 같은 경우, 가장 최근의 진행 과정을 저장하는 배열을 따로 TodoModel 객체의 property로 두어, undo 명령어가 들어올시 이를 참고하는 식으로 구현할 수 있을 것 같다.</li>
-      <li>redo 같은 경우, undo와 마찬가지로 진행과정을 저장하는 배열에서 가장 최근에 저장된 요소를 다시 수행하는 식으로 하면 가능할 것으로 사료된다.</li>
-    </ul>
-  </li>
-  <li>
-    <p>html파일생성이 아닌 markdown포맷을 생성하는 view클래스를 만든다고 가정한다. Obsever패턴을 어떻게 적용할 수 있을까? Observer패턴의 장점은 무엇일까?</p>
-    <ul>
-      <li>기존에 있던 observer패턴 그대로에, 기존에 있던 TodoHtmlView클래스와 같이 markdown포맷을 생성하는 view클래스를 생성해 update함수만 포함하게 하면 적용이 가능하다.</li>
-      <li>위와 같이 Observer패턴에서는 각각의 파생 Observer에서 각자 원하는 행동을 취할 수 있으며, 변화가 생겼을 때 자신이 가지고 있는 Observers에게 notify만 해주면, 그에 따른 필요한 행위를 한번에 처리가 가능하다.</li>
-      <li>위와 같이 Observer 패턴을 사용해주고자하면, 자체적으로 기능을 새로 추가하지 않고 Observable 모듈을 만들어두고, 이를 상속받아 활용해주면 된다.</li>
-    </ul>
-  </li>
+  <li>undo 같은 경우, 가장 최근의 진행 과정을 저장하는 배열을 따로 TodoModel 객체의 property로 두어, undo 명령어가 들어올시 이를 참고하는 식으로 구현할 수 있을 것 같다.</li>
+  <li>redo 같은 경우, undo와 마찬가지로 진행과정을 저장하는 배열에서 가장 최근에 저장된 요소를 다시 수행하는 식으로 하면 가능할 것으로 사료된다.</li>
 </ul>
+
+<p>html파일생성이 아닌 markdown포맷을 생성하는 view클래스를 만든다고 가정한다. Obsever패턴을 어떻게 적용할 수 있을까? Observer패턴의 장점은 무엇일까?</p>
+<ul>
+  <li>기존에 있던 observer패턴 그대로에, 기존에 있던 TodoHtmlView클래스와 같이 markdown포맷을 생성하는 view클래스를 생성해 update함수만 포함하게 하면 적용이 가능하다.</li>
+  <li>위와 같이 Observer패턴에서는 각각의 파생 Observer에서 각자 원하는 행동을 취할 수 있으며, 변화가 생겼을 때 자신이 가지고 있는 Observers에게 notify만 해주면, 그에 따른 필요한 행위를 한번에 처리가 가능하다.</li>
+  <li>위와 같이 Observer 패턴을 사용해주고자하면, 자체적으로 기능을 새로 추가하지 않고 Observable 모듈을 만들어두고, 이를 상속받아 활용해주면 된다.</li>
+</ul>
+
+<blockquote>
+  <p>reference</p>
+  <ul>
+    <li><a href="https://gmlwjd9405.github.io/2018/07/06/design-pattern.html">https://gmlwjd9405.github.io/2018/07/06/design-pattern.html</a></li>
+    <li><a href="https://gmlwjd9405.github.io/2018/07/07/command-pattern.html">https://gmlwjd9405.github.io/2018/07/07/command-pattern.html</a></li>
+    <li><a href="https://gone-sw.tistory.com/4">https://gone-sw.tistory.com/4</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/Command_pattern">https://en.wikipedia.org/wiki/Command_pattern</a></li>
+  </ul>
+</blockquote>
 
 <!--
 # Day8 OOP 할일관리 프로그램

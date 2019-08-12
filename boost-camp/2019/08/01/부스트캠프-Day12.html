@@ -13,7 +13,7 @@
   </title>
 
   <meta name="description"
-    content="Canvas 웹 브라우저를 비롯한 클라이언트 화면은 2차원 좌표시스템을 따르고 있다. 2차원 좌표 시스템 상에 점, 선, 면, 텍스트, 이미지 등을 그리고 회전하고 이동하는 시스템에 대해 학습해 보자. 1. 코드 동작 이해 너비 600, 높이 400으로 캔버스를 생성하고 녹색으로 ...">
+    content="Canvas 웹 브라우저를 비롯한 클라이언트 화면은 2차원 좌표시스템을 따르고 있다. 2차원 좌표 시스템 상에 점, 선, 면, 텍스트, 이미지 등을 그리고 회전하고 이동하는 시스템에 대해 학습해 보자. 코드 동작 이해 너비 600, 높이 400으로 캔버스를 생성하고 녹색으로 색칠한...">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   <script>
         (adsbygoogle = window.adsbygoogle || []).push({
@@ -105,69 +105,77 @@
 <p>웹 브라우저를 비롯한 클라이언트 화면은 2차원 좌표시스템을 따르고 있다. 
 2차원 좌표 시스템 상에 점, 선, 면, 텍스트, 이미지 등을 그리고 회전하고 이동하는 시스템에 대해 학습해 보자.</p>
 
-<h2 id="1-코드-동작-이해">1. 코드 동작 이해</h2>
+<h2 id="코드-동작-이해">코드 동작 이해</h2>
 <ol>
   <li>너비 600, 높이 400으로 캔버스를 생성하고 녹색으로 색칠한다.</li>
   <li>좌측 상단에 흰색 배경색으로 circle을 그려 얼굴을 만든다.</li>
   <li>동일한 반지름 크기로 원호를 그려 입을 만든다.</li>
   <li>작은 반지름으로 눈 모양을 만든다.</li>
   <li>지름과 같은 크기로 정사각형을 그려 몸통을 만들고 Gradient로 표현한다.</li>
-  <li>아랫 부분은 검정색 굵은 직선으로 다리 부분을 만들고 오른쪽 다리는 점선으로 변경한다.
-    <pre><code class="language-javascript="> ctx.beginPath() 
- // -&gt; 경로 그리기... 
- ctx.stroke() 
- //또는 ctx.fill()
-</code></pre>
-  </li>
-  <li>간단한 문자열을 얼굴 옆에 그리고 -330도 회전한다.
-    <pre><code class="language-javascript=">ctx.translate(450, 70); //중점으로 이동
-ctx.rotate((Math.PI/180)*330); // 회전
-ctx.translate(-450,-70); // 복귀 
-</code></pre>
-  </li>
-  <li>7개의 직선을 연결하여 화살표 모양을 만들고 화살표 좌측 아래를 기준으로 30도 회전한다.
-    <pre><code class="language-javascript=">function drawArrow(x, y) {
- ctx.beginPath();
- ctx.moveTo(x, y);
- ctx.lineTo(x + 70, y);
- ctx.lineTo(x + 70, y - 20);
- ctx.lineTo(x + 120, y + 10);
- ctx.lineTo(x + 70, y + 40);
- ctx.lineTo(x + 70, y + 20);
- ctx.lineTo(x, y + 20);
- ctx.lineTo(x, y);
- ctx.fillStyle = 'gray';
- ctx.fill();
-}
-</code></pre>
-  </li>
-  <li>화살표 아래에는 유명한 미술작품 이미지를 몸통 정사각형 높이 혹은 너비와 같도록 이미지 비율을 맞춰서 그린다.
-    <pre><code class="language-javascript=">function scaleImageSize(img, x, y, len) {
- let width, height;
- if (img.width &gt; img.height) {
-     width = len;
-     height = img.hight * len / img.width;
-     return [x, y + (len - height) / 2, width, height];
- } else {
-     width = img.width * len / img.height;
-     height = len;
-     return [x + (len - width) / 2, y, width, height];
- }
-}
-</code></pre>
-  </li>
-  <li>캔버스로 그린 것을 jpg 또는 png 이미지 파일로 저장한다.
-    <pre><code class="language-javascript=">function saveToImageFile() {
-const out = fs.createWriteStream(__dirname + '/9.png');
-const stream = canvas.createPNGStream();
-stream.on('data', function (chunk) {
-    out.write(chunk);
-});
-}
-</code></pre>
-    <h2 id="2-코드-동작-개선">2. 코드 동작 개선</h2>
-  </li>
+  <li>아랫 부분은 검정색 굵은 직선으로 다리 부분을 만들고 오른쪽 다리는 점선으로 변경한다.</li>
 </ol>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">()</span> 
+ <span class="c1">// -&gt; 경로 그리기... </span>
+ <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">()</span> 
+ <span class="c1">//또는 ctx.fill()</span>
+</code></pre></div></div>
+<ol>
+  <li>간단한 문자열을 얼굴 옆에 그리고 -330도 회전한다.</li>
+</ol>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">ctx</span><span class="p">.</span><span class="nx">translate</span><span class="p">(</span><span class="mi">450</span><span class="p">,</span> <span class="mi">70</span><span class="p">);</span> <span class="c1">//중점으로 이동</span>
+<span class="nx">ctx</span><span class="p">.</span><span class="nx">rotate</span><span class="p">((</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="o">/</span><span class="mi">180</span><span class="p">)</span><span class="o">*</span><span class="mi">330</span><span class="p">);</span> <span class="c1">// 회전</span>
+<span class="nx">ctx</span><span class="p">.</span><span class="nx">translate</span><span class="p">(</span><span class="o">-</span><span class="mi">450</span><span class="p">,</span><span class="o">-</span><span class="mi">70</span><span class="p">);</span> <span class="c1">// 복귀 </span>
+</code></pre></div></div>
+<ol>
+  <li>7개의 직선을 연결하여 화살표 모양을 만들고 화살표 좌측 아래를 기준으로 30도 회전한다.</li>
+</ol>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">drawArrow</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">x</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">x</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="nx">y</span> <span class="o">-</span> <span class="mi">20</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">x</span> <span class="o">+</span> <span class="mi">120</span><span class="p">,</span> <span class="nx">y</span> <span class="o">+</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">x</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="nx">y</span> <span class="o">+</span> <span class="mi">40</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">x</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="nx">y</span> <span class="o">+</span> <span class="mi">20</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">+</span> <span class="mi">20</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">gray</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">fill</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<ol>
+  <li>화살표 아래에는 유명한 미술작품 이미지를 몸통 정사각형 높이 혹은 너비와 같도록 이미지 비율을 맞춰서 그린다.</li>
+</ol>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">scaleImageSize</span><span class="p">(</span><span class="nx">img</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">len</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">width</span><span class="p">,</span> <span class="nx">height</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">img</span><span class="p">.</span><span class="nx">width</span> <span class="o">&gt;</span> <span class="nx">img</span><span class="p">.</span><span class="nx">height</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">width</span> <span class="o">=</span> <span class="nx">len</span><span class="p">;</span>
+        <span class="nx">height</span> <span class="o">=</span> <span class="nx">img</span><span class="p">.</span><span class="nx">hight</span> <span class="o">*</span> <span class="nx">len</span> <span class="o">/</span> <span class="nx">img</span><span class="p">.</span><span class="nx">width</span><span class="p">;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">+</span> <span class="p">(</span><span class="nx">len</span> <span class="o">-</span> <span class="nx">height</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">width</span><span class="p">,</span> <span class="nx">height</span><span class="p">];</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">width</span> <span class="o">=</span> <span class="nx">img</span><span class="p">.</span><span class="nx">width</span> <span class="o">*</span> <span class="nx">len</span> <span class="o">/</span> <span class="nx">img</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span>
+        <span class="nx">height</span> <span class="o">=</span> <span class="nx">len</span><span class="p">;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nx">x</span> <span class="o">+</span> <span class="p">(</span><span class="nx">len</span> <span class="o">-</span> <span class="nx">width</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">width</span><span class="p">,</span> <span class="nx">height</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<ol>
+  <li>캔버스로 그린 것을 jpg 또는 png 이미지 파일로 저장한다.</li>
+</ol>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">saveToImageFile</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">out</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">createWriteStream</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">/9.png</span><span class="dl">'</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">stream</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">createPNGStream</span><span class="p">();</span>
+    <span class="nx">stream</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">data</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">out</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">chunk</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h2 id="2-코드-동작-개선">2. 코드 동작 개선</h2>
 
 <ul>
   <li>canvas API의 다양한 사용법을 익힐 수 있었다.</li>
@@ -179,82 +187,63 @@ stream.on('data', function (chunk) {
 <h3 id="3-1-스스로-확인할-사항">3-1. 스스로 확인할 사항</h3>
 <h4 id="canvas-api-종류들에-대해-학습하고-정리한다">CANVAS API 종류들에 대해 학습하고 정리한다.</h4>
 
+<p>Drawing Shapes</p>
 <ul>
-  <li>Drawing Shapes
-    <ul>
-      <li>기본적으로 beginPath()함수와 closePath(), arc(), moveTo(), lineTo(), fill()함수로 모든 것을 그릴 수가 있다.</li>
-      <li>편하게 사각형을 그릴 때 쓸 수 있는 함수가 존재한다.(fillRect()함수)</li>
-    </ul>
-  </li>
-  <li>Drawing text
-    <ul>
-      <li>fillText(), strokeText()함수로 텍스트를 생성할 수 있다.</li>
-    </ul>
-  </li>
-  <li>Using Images
-    <ul>
-      <li>new Image()로 Image객체를 생성해 받아온 이미지를 조작할 수 있다.</li>
-      <li>drawImage()함수의 인자 개수를 조절해 scaling, slicing을 할 수 있다.</li>
-    </ul>
-  </li>
-  <li>Transformaitons
-    <ul>
-      <li>save(), restore()함수로 canvas의 현재상태를 저장하고 복원할 수 있다.</li>
-      <li>translate()함수로 canvas의 시작이 되는 origin좌표를 조절할 수 있다.</li>
-      <li>rotate(), transform(), scale()함수로 변형이 가능하다.</li>
-    </ul>
-  </li>
-  <li>Animations
-    <ul>
-      <li>기존의 setInterval(),setTimeout()을 사용해도 되지만, requestAnimationFrame을 사용해서 만들 수도 있다.</li>
-    </ul>
-  </li>
-  <li>Pixel manipulation
-    <ul>
-      <li>ImageData객체를 이용해 픽셀의 정보를 받아올 수 있고, 해당 픽셀에 대해 다양한 조작이 가능하다</li>
-    </ul>
-  </li>
+  <li>기본적으로 beginPath()함수와 closePath(), arc(), moveTo(), lineTo(), fill()함수로 모든 것을 그릴 수가 있다.</li>
+  <li>편하게 사각형을 그릴 때 쓸 수 있는 함수가 존재한다.(fillRect()함수)
+Drawing text</li>
+  <li>fillText(), strokeText()함수로 텍스트를 생성할 수 있다.
+Using Images</li>
+  <li>new Image()로 Image객체를 생성해 받아온 이미지를 조작할 수 있다.</li>
+  <li>drawImage()함수의 인자 개수를 조절해 scaling, slicing을 할 수 있다.
+Transformaitons</li>
+  <li>save(), restore()함수로 canvas의 현재상태를 저장하고 복원할 수 있다.</li>
+  <li>translate()함수로 canvas의 시작이 되는 origin좌표를 조절할 수 있다.</li>
+  <li>rotate(), transform(), scale()함수로 변형이 가능하다.
+Animations</li>
+  <li>기존의 setInterval(),setTimeout()을 사용해도 되지만, requestAnimationFrame을 사용해서 만들 수도 있다.
+Pixel manipulation</li>
+  <li>ImageData객체를 이용해 픽셀의 정보를 받아올 수 있고, 해당 픽셀에 대해 다양한 조작이 가능하다</li>
 </ul>
 
 <h3 id="3-2-다같이-확인할-사항">3-2. 다같이 확인할 사항</h3>
-<h4 id="1svg-개념에-대해-학습하고-canvas-2d-api와-비교해서-정리한다">1.SVG 개념에 대해 학습하고 CANVAS 2D API와 비교해서 정리한다.</h4>
-<h4 id="2다양한-이미지-파일-포맷에-대해-학습하고-정리한다">2.다양한 이미지 파일 포맷에 대해 학습하고 정리한다.</h4>
 
-<h4 id="svg">SVG</h4>
+<p><strong>SVG 개념에 대해 학습하고 CANVAS 2D API와 비교해서 정리한다.</strong></p>
+
 <ul>
   <li>canvas의 성능은 픽셀 수가 많을 경우(&gt;10k)에 좋고, svg의 성능은 픽셀 수가 적을 경우(&lt;10k)에 좋다.</li>
   <li>canvas는 고성능의 애니메이션 작업이나 동영상 조작 등의 작업에 유리하고, svg는 고품질의 문서작업이나 정적 이미지의 조작에 유리하다.</li>
   <li>canvas는 스크립트를 통해서만 작업이 가능하고, svg는 css를 통해서도 작업이 가능하다.</li>
   <li>canvas는 픽셀(pixel) 기반이지만 svg는 모양(shape) 기반이다.</li>
-  <li>같은 픽셀의 화면에 같은 수의 점을 그리는 실험 시, canvas가 HTML이나 SVG보다 훨씬 빠르고 성능이 좋다. 특히 픽셀이 많아질 수록 그 차이는 훨씬 커지며 canvas가 월등히 좋은 성능을 보인다.
-    <h4 id="다양한-이미지-파일-포맷">다양한 이미지 파일 포맷</h4>
-  </li>
-  <li>BMP
-    <ul>
-      <li>이미지 파일을 무손실 이미지로 저장이 가능하다.</li>
-      <li>‘반복 문자열 제거’ 압축 기법 때문에 호율이 좋지는 않다</li>
-      <li>따라서 용량은 크지만 호환성이 매우 좋다.</li>
-    </ul>
-  </li>
-  <li>GIF
-    <ul>
-      <li>웹 상에서 가장 널리 사용되는 이미지 포맷</li>
-      <li>Animation GIF로 움직이는 이미지로 주로 사용된다.</li>
-      <li>비손실 압축, 인덱스 컬러기반의 비트맵 이미지 파일 포멧</li>
-    </ul>
-  </li>
-  <li>JPEG
-    <ul>
-      <li>무손실 압축이 아니지만 하지만 효율적인 압축률을 보여준다.</li>
-      <li>손실은 있지만 원본 이미지와 차이가 크지 않기 때문에 가장 대중적인 포맷</li>
-    </ul>
-  </li>
-  <li>PNG
-    <ul>
-      <li>GIF를 대체하기 위해 만들어진 오픈소스 파일 포맷이다.(특허 관련 문제)</li>
-      <li>JPEG와 비교해서 무손실 압축이기 때문에 비슷한 색이 넓게 사용될 때 유리하다.</li>
-    </ul>
-  </li>
+  <li>같은 픽셀의 화면에 같은 수의 점을 그리는 실험 시, canvas가 HTML이나 SVG보다 훨씬 빠르고 성능이 좋다. 특히 픽셀이 많아질 수록 그 차이는 훨씬 커지며 canvas가 월등히 좋은 성능을 보인다.</li>
+</ul>
+
+<p><strong>2.다양한 이미지 파일 포맷에 대해 학습하고 정리한다.</strong></p>
+
+<p>BMP</p>
+<ul>
+  <li>이미지 파일을 무손실 이미지로 저장이 가능하다.</li>
+  <li>‘반복 문자열 제거’ 압축 기법 때문에 호율이 좋지는 않다</li>
+  <li>따라서 용량은 크지만 호환성이 매우 좋다.</li>
+</ul>
+
+<p>GIF</p>
+<ul>
+  <li>웹 상에서 가장 널리 사용되는 이미지 포맷</li>
+  <li>Animation GIF로 움직이는 이미지로 주로 사용된다.</li>
+  <li>비손실 압축, 인덱스 컬러기반의 비트맵 이미지 파일 포멧</li>
+</ul>
+
+<p>JPEG</p>
+<ul>
+  <li>무손실 압축이 아니지만 하지만 효율적인 압축률을 보여준다.</li>
+  <li>손실은 있지만 원본 이미지와 차이가 크지 않기 때문에 가장 대중적인 포맷</li>
+</ul>
+
+<p>PNG</p>
+<ul>
+  <li>GIF를 대체하기 위해 만들어진 오픈소스 파일 포맷이다.(특허 관련 문제)</li>
+  <li>JPEG와 비교해서 무손실 압축이기 때문에 비슷한 색이 넓게 사용될 때 유리하다.</li>
 </ul>
 
 <!--

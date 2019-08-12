@@ -13,7 +13,7 @@
   </title>
 
   <meta name="description"
-    content="Async Cafe 카페에서 동시에 여러 고객이 다양한 음료를 주문했을 때 주문해서 나올 때까지 여러 명의 바리스타 비동기 작업을 시뮬레이션하는 프로그램을 만들어보자 1. 코드 동작 이해 class간의 통신을 주로 event를 통해서 관리한다. ```js Manager.js con...">
+    content="Async Cafe 카페에서 동시에 여러 고객이 다양한 음료를 주문했을 때 주문해서 나올 때까지 여러 명의 바리스타 비동기 작업을 시뮬레이션하는 프로그램을 만들어보자 1. 코드 동작 이해 class간의 통신을 주로 event를 통해서 관리한다. &amp;gt; Manager.js cons...">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   <script>
         (adsbygoogle = window.adsbygoogle || []).push({
@@ -106,153 +106,126 @@
 
 <h2 id="1-코드-동작-이해">1. 코드 동작 이해</h2>
 
-<ol>
-  <li>class간의 통신을 주로 event를 통해서 관리한다.
-  ```js
-    <blockquote>
-      <p>Manager.js
-  const EventEmitter = require(‘events’);
-  const Manager = class extends EventEmitter {//events모듈의 EventEmitter를 상속
-   constructor(){
-       super();
-       this.on(‘event’, (parameters) =&gt; { //이벤트를 받는 역할
-           …
-       })
-   }
-  }</p>
-    </blockquote>
-  </li>
-</ol>
+<p>class간의 통신을 주로 event를 통해서 관리한다.<br /><br /></p>
 
-<blockquote>
-  <p>Baristar.js
-  manager.emit(‘event’, …parameters);//manager의 이벤트를 발생시킨다.
-  ```</p>
-  <ol>
-    <li>cashier는 command창에서 주문과 바리스타 수를 입력받아 manager객체를 생성하고 dashBoard와 orderQueue에 주문이 <code class="highlighter-rouge">추가되었다</code>라는 event를 발생시킨다.</li>
-  </ol>
-</blockquote>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="nx">Manager</span><span class="p">.</span><span class="nx">js</span>
+<span class="kd">const</span> <span class="nx">EventEmitter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">events</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">Manager</span> <span class="o">=</span> <span class="kd">class</span> <span class="kd">extends</span> <span class="nx">EventEmitter</span> <span class="p">{</span><span class="c1">//events모듈의 EventEmitter를 상속</span>
+    <span class="kd">constructor</span><span class="p">(){</span>
+        <span class="k">super</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">event</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">parameters</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">//이벤트를 받는 역할</span>
+            <span class="p">...</span>
+        <span class="p">})</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-<ol>
-  <li>
-    <p>manager class 프로그램의 중심이 되는 역할을 한다. 1초간격으로 orderQueue를 관찰하여, baristar에게 일을 전달한다. baristar에게서 완료 이벤트를 받으면 orderQueue와 dashBoard에 event를 발생시킨다.</p>
-  </li>
-  <li>
-    <p>Baristar class는 manager로부터 event를 통해 주문을 받으면 음료를 만드는 함수를 실행시키고 결과를 event로 다시 매니저에게 전달한다.</p>
-  </li>
-  <li>
-    <p>OrderQueue class는 order를 queue형식으로 가지며, 현재 주문 상태를 관리한다. listner를 통해 Manager로부터 event를 받아 order를 추가, 삭제한다.</p>
-  </li>
-  <li>
-    <p>DashBoard class는 listener를 통해 update, complete, start event 등을 받아 현재 상태를 출력하고, 현황판을 위해 현재 주문 상태를 json파일 형식으로 내보낸다.</p>
-  </li>
-  <li>
-    <p>/server/index.js 는 9000번 포트를 열어 dashBoard가 만든 json파일을 불러와 <code class="highlighter-rouge">/</code>로 라우팅되면 모든 손님 상태를 <code class="highlighter-rouge">/:customer</code>로 라우팅 되면 해당 손님 상태를 보여준다</p>
-  </li>
-</ol>
+<span class="o">&gt;</span> <span class="nx">Baristar</span><span class="p">.</span><span class="nx">js</span>
+<span class="nx">manager</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">event</span><span class="dl">'</span><span class="p">,</span> <span class="p">...</span><span class="nx">parameters</span><span class="p">);</span><span class="c1">//manager의 이벤트를 발생시킨다.</span>
+</code></pre></div></div>
+<p>cashier는 command창에서 주문과 바리스타 수를 입력받아 manager객체를 생성하고 dashBoard와 orderQueue에 주문이 <code class="highlighter-rouge">추가되었다</code>라는 event를 발생시킨다.<br /><br />
+manager class 프로그램의 중심이 되는 역할을 한다. 1초간격으로 orderQueue를 관찰하여, baristar에게 일을 전달한다. baristar에게서 완료 이벤트를 받으면 orderQueue와 dashBoard에 event를 발생시킨다.<br /><br />
+Baristar class는 manager로부터 event를 통해 주문을 받으면 음료를 만드는 함수를 실행시키고 결과를 event로 다시 매니저에게 전달한다.<br /><br />
+OrderQueue class는 order를 queue형식으로 가지며, 현재 주문 상태를 관리한다. listner를 통해 Manager로부터 event를 받아 order를 추가, 삭제한다.<br /><br />
+DashBoard class는 listener를 통해 update, complete, start event 등을 받아 현재 상태를 출력하고, 현황판을 위해 현재 주문 상태를 json파일 형식으로 내보낸다.<br /><br />
+/server/index.js 는 9000번 포트를 열어 dashBoard가 만든 json파일을 불러와 <code class="highlighter-rouge">/</code>로 라우팅되면 모든 손님 상태를 <code class="highlighter-rouge">/:customer</code>로 라우팅 되면 해당 손님 상태를 보여준다<br /><br /></p>
 
 <h2 id="2-코드-동작-개선">2. 코드 동작 개선</h2>
 
-<ul>
-  <li>구현 시간 상, DashBoard class와 OrderQueue class에서 따로 주문을 관리하지만 사실 OrderQueue에서 관리를 하고 DashBoard에서는 property로 orderQueue를 가지는 것도 괜찮은 설계이다.</li>
-  <li>구현을 하다보니 global하게 쓰는 constant들이 많아졌는데, 따라 파일로 만들어서 가져오는 것이 효율적이다.</li>
-  <li>baristar가 3명 이상일 때, major drink를 1개로 두었지만 2개로 두면 놀고 있는 바리스타들이 훨씬 줄어든다. 사실 baristar마다 priorityQueue를 가지게 해서 음료에 맞는 바리스타들을 선정하는 것이 제일 효율적이다.</li>
-  <li>설계 시, 후에 어떤 부분을 더 구현하게 될지 모르기 때문에 최대한 확장성이 좋고 재사용성이 좋게 짜는 것이 좋다.</li>
-</ul>
+<p>구현 시간 상, DashBoard class와 OrderQueue class에서 따로 주문을 관리하지만 사실 OrderQueue에서 관리를 하고 DashBoard에서는 property로 orderQueue를 가지는 것도 괜찮은 설계이다.<br /><br />
+구현을 하다보니 global하게 쓰는 constant들이 많아졌는데, 따라 파일로 만들어서 가져오는 것이 효율적이다.<br /><br />
+baristar가 3명 이상일 때, major drink를 1개로 두었지만 2개로 두면 놀고 있는 바리스타들이 훨씬 줄어든다. 사실 baristar마다 priorityQueue를 가지게 해서 음료에 맞는 바리스타들을 선정하는 것이 제일 효율적이다.<br /><br />
+설계 시, 후에 어떤 부분을 더 구현하게 될지 모르기 때문에 최대한 확장성이 좋고 재사용성이 좋게 짜는 것이 좋다.<br /><br /></p>
 
 <h2 id="3-consideration">3. Consideration</h2>
 
 <h3 id="스스로-확인할-사항">스스로 확인할 사항</h3>
-<h4 id="nodejs-이벤트-루프와-이벤트-처리event-emitter-방식에-대해-학습하고-정리한다">Node.js 이벤트 루프와 이벤트 처리(Event Emitter) 방식에 대해 학습하고 정리한다.</h4>
+<p><strong>Node.js 이벤트 루프와 이벤트 처리(Event Emitter) 방식에 대해 학습하고 정리한다.</strong></p>
+
+<p>이벤트 루프</p>
 <ul>
-  <li>이벤트 루프
+  <li>노드에서 일어나는 모든 일은 어떤 이벤트에 대한 반응이다</li>
+  <li>이벤트루프는 Node.js를 실행시켜주는 것이다.</li>
+</ul>
+
+<p><img src="https://i.imgur.com/laxyuo0.png" alt="" /></p>
+
+<ul>
+  <li>이벤트루프는 몇가지 단계들을 차례대로 반복하면서 순서대로 각 단계들의 작업들을 처리해나갑니다.(초록색 박스)</li>
+  <li>Timer
     <ul>
-      <li>노드에서 일어나는 모든 일은 어떤 이벤트에 대한 반응이다</li>
-      <li>이벤트루프는 Node.js를 실행시켜주는 것이다.</li>
-      <li><img src="https://i.imgur.com/laxyuo0.png" alt="" /></li>
-      <li>이벤트루프는 몇가지 단계들을 차례대로 반복하면서 순서대로 각 단계들의 작업들을 처리해나갑니다.(초록색 박스)</li>
-      <li>Timer
-        <ul>
-          <li>setTimeout/Interval에서 스케줄링된 모든 것이 처리된다</li>
-          <li>하지만 그 타이머 안에 등록한 콜백함수의 실행은 Polling 단계의 가장 앞부분에서 이루어진다</li>
-        </ul>
-      </li>
-      <li>IO Callbacks
-        <ul>
-          <li>TCP오류 같은 시스템 작업의 콜백을 반환한다</li>
-        </ul>
-      </li>
-      <li>IO Polling
-        <ul>
-          <li>Timers 단계에 스케줄링 되었던 콜백들 중에, 시간이 지난 타이머의 콜백을 실행합니다</li>
-          <li>그 다음, Poll 단계의 큐에 있는 이벤트들을 처리합니다. 대부분의 콜백들은 이 Poll 단계에서 처리됩니다</li>
-        </ul>
-      </li>
-      <li>Set Immediate
-        <ul>
-          <li>setImmediate()를 통해 등록된 모든 콜백을 실행됩니다.</li>
-        </ul>
-      </li>
-      <li>Close Events
-        <ul>
-          <li>close 이벤트에 대한 모든 콜백 실행</li>
-        </ul>
-      </li>
-      <li>이벤트 처리 방식(Event Emitter)
-        <ul>
-          <li>Node.JS에 내장되어 있는 일종의 옵저버 패턴 구현</li>
-          <li>이벤트를 내보내는 모든 객체는 EventEmitter 클래스의 인스턴스다.</li>
-          <li>EventEmitter 객체로 이벤트를 호출(emit)할 때, 해당 이벤트에 붙어 있는 모든 함수(listener)는 동기적으로 호출된다. 호출을 받은 리스너가 반환하는 결과는 어떤 값이든 무시되고 폐기된다.</li>
-          <li>메소드 종류로는 emit, on, once 등이 있다</li>
-        </ul>
-      </li>
+      <li>setTimeout/Interval에서 스케줄링된 모든 것이 처리된다</li>
+      <li>하지만 그 타이머 안에 등록한 콜백함수의 실행은 Polling 단계의 가장 앞부분에서 이루어진다</li>
+    </ul>
+  </li>
+  <li>IO Callbacks
+    <ul>
+      <li>TCP오류 같은 시스템 작업의 콜백을 반환한다</li>
+    </ul>
+  </li>
+  <li>IO Polling
+    <ul>
+      <li>Timers 단계에 스케줄링 되었던 콜백들 중에, 시간이 지난 타이머의 콜백을 실행합니다</li>
+      <li>그 다음, Poll 단계의 큐에 있는 이벤트들을 처리합니다. 대부분의 콜백들은 이 Poll 단계에서 처리됩니다</li>
+    </ul>
+  </li>
+  <li>Set Immediate
+    <ul>
+      <li>setImmediate()를 통해 등록된 모든 콜백을 실행됩니다.</li>
+    </ul>
+  </li>
+  <li>Close Events
+    <ul>
+      <li>close 이벤트에 대한 모든 콜백 실행</li>
     </ul>
   </li>
 </ul>
 
-<h4 id="day14에서-워커를-사용한-멀티-스레드-방식과-단일-스레드에서-비동기-병렬-처리-방식에-대해-비교해서-학습하고-정리한다">Day14에서 워커를 사용한 멀티 스레드 방식과 단일 스레드에서 비동기 병렬 처리 방식에 대해 비교해서 학습하고 정리한다.</h4>
-
+<p>이벤트 처리 방식(Event Emitter)</p>
 <ul>
-  <li>멀티 스레드 방식
-    <ul>
-      <li>바리스타의 작업을 웹 워커(스레드)를 생성해서 진행시킨다</li>
-      <li>웹 워커는 오래 걸리는 작업들(랜더링 작업)에 주로 사용된다.</li>
-    </ul>
-  </li>
-  <li>단일 스레드 &amp; 비동기 병렬 처리 방식
-    <ul>
-      <li>바리스타의 작업을 이벤트 호출을 통해 진행시킨다.</li>
-    </ul>
-  </li>
+  <li>Node.JS에 내장되어 있는 일종의 옵저버 패턴 구현</li>
+  <li>이벤트를 내보내는 모든 객체는 EventEmitter 클래스의 인스턴스다.</li>
+  <li>EventEmitter 객체로 이벤트를 호출(emit)할 때, 해당 이벤트에 붙어 있는 모든 함수(listener)는 동기적으로 호출된다. 호출을 받은 리스너가 반환하는 결과는 어떤 값이든 무시되고 폐기된다.</li>
+  <li>메소드 종류로는 emit, on, once 등이 있다</li>
+</ul>
+
+<p><strong>Day14에서 워커를 사용한 멀티 스레드 방식과 단일 스레드에서 비동기 병렬 처리 방식에 대해 비교해서 학습하고 정리한다.</strong></p>
+
+<p>멀티 스레드 방식</p>
+<ul>
+  <li>바리스타의 작업을 웹 워커(스레드)를 생성해서 진행시킨다</li>
+  <li>웹 워커는 오래 걸리는 작업들(랜더링 작업)에 주로 사용된다.</li>
+</ul>
+
+<p>단일 스레드 &amp; 비동기 병렬 처리 방식</p>
+<ul>
+  <li>바리스타의 작업을 이벤트 호출을 통해 진행시킨다.</li>
   <li>두 방식 모두 비동기로 진행되어서 오래 걸리는 작업에 Block 되는 일을 방지해준다.</li>
 </ul>
 
 <h3 id="다같이-확인할-사항">다같이 확인할 사항</h3>
-<h4 id="event-bus-패턴에-대해-학습하고-주문-담당자-매니저-주문-대기표-바리스타-관계를-비교한다">Event-Bus 패턴에 대해 학습하고 주문 담당자, 매니저, 주문 대기표, 바리스타 관계를 비교한다.</h4>
-<ul>
-  <li>특정 채널을 통해 메시지가 메시지 버스를 통해 전달 되면, 리스너(listener)는 등록(subscribe)한 특정 채널에 해당하는 메시지를 이벤트로 받는 구조이다. 이벤트를 받는 것을 영어로 Event Notification이라고도 한다.</li>
-  <li>이벤트-버스 아키텍쳐 패턴(Event-bus Architectural pattern)은 고도로 분산화된 애플리케이션에 효과적이라고 할 수 있다. 반면, 모든 메시지가 동일한 이벤트 버스를 통해 전달되기 때문에 확장성 문제가 발생할 수 있다는 단점이 있다.</li>
-  <li>주문 담당자는 event source가 되고, 매니저는 event channel이 된다. 또한 바리스타는 event listener이다.
-<img src="http://kurapa.com/wp-content/uploads/2018/08/image-13.png" alt="" /></li>
-</ul>
+<p><strong>Event-Bus 패턴에 대해 학습하고 주문 담당자, 매니저, 주문 대기표, 바리스타 관계를 비교한다.</strong></p>
 
-<h4 id="publish-subscribe-패턴에-대해-학습하고-이벤트-처리-대신-구조에-적용할-수-있는지-확인한다">Publish-subscribe 패턴에 대해 학습하고, 이벤트 처리 대신 구조에 적용할 수 있는지 확인한다.</h4>
-<ul>
-  <li>Pub-Sub 패턴은 여러가지 메시지 패턴 중 하나이다.</li>
-  <li>Observe 패턴과 달리 구독자와 출판자의 등록 과정을 분리하여 의존성을 더욱 낮추고 있다.</li>
-  <li>이 때 Publisher와 Subscriber 사이의 역할을 Event Bus가 채워주게 된다.</li>
-  <li>발생한 이벤트에 따라 각각의 이벤트가 발생할 수 있으므로, Pub-Sub 패턴을 기존 구조에 적용할 수 있다.</li>
-</ul>
+<p>특정 채널을 통해 메시지가 메시지 버스를 통해 전달 되면, 리스너(listener)는 등록(subscribe)한 특정 채널에 해당하는 메시지를 이벤트로 받는 구조이다. 이벤트를 받는 것을 영어로 Event Notification이라고도 한다.<br />
+이벤트-버스 아키텍쳐 패턴(Event-bus Architectural pattern)은 고도로 분산화된 애플리케이션에 효과적이라고 할 수 있다. 반면, 모든 메시지가 동일한 이벤트 버스를 통해 전달되기 때문에 확장성 문제가 발생할 수 있다는 단점이 있다.<br />
+주문 담당자는 event source가 되고, 매니저는 event channel이 된다. 또한 바리스타는 event listener이다.</p>
+
+<p><img src="http://kurapa.com/wp-content/uploads/2018/08/image-13.png" alt="" /></p>
+
+<p><strong>Publish-subscribe 패턴에 대해 학습하고, 이벤트 처리 대신 구조에 적용할 수 있는지 확인한다.</strong></p>
+
+<p>Pub-Sub 패턴은 여러가지 메시지 패턴 중 하나이다.<br />
+Observe 패턴과 달리 구독자와 출판자의 등록 과정을 분리하여 의존성을 더욱 낮추고 있다.<br />
+이 때 Publisher와 Subscriber 사이의 역할을 Event Bus가 채워주게 된다.<br />
+발생한 이벤트에 따라 각각의 이벤트가 발생할 수 있으므로, Pub-Sub 패턴을 기존 구조에 적용할 수 있다.<br /></p>
 
 <p><img src="https://i.imgur.com/h13Jtmy.png" alt="" /></p>
 
-<h4 id="만드는-데-4초가-걸리는-허브티와-15초가-걸리는-팥빙수를-추가하기-위한-구조와-코드를-토론한다">만드는 데 4초가 걸리는 허브티와 15초가 걸리는 팥빙수를 추가하기 위한 구조와 코드를 토론한다.</h4>
-<ul>
-  <li>기존의 코드 동작 과정에서 크게 달라지는 것이 없다.</li>
-  <li>Queue에 저장되는 데이터의 type과 delay가 종류에 따라 추가되는 것 뿐이다.</li>
-  <li>Manager에서는 Barista에게 Queue에 저장된 데이터를 보내게 되고, Barista는 해당 데이터에 따라 delay*1000ms 후에 동작을 하게 되므로 기존 동작과정에서 발생하는 문제는 없다.</li>
-  <li>단, 팥빙수는 다른 제조 과정보다 오랜 시간이 걸리기 때문에 팥빙수를 담당해서 만드는 바리스타가 있도록 설계하면 더 좋은 알고리즘으로 동작할 수 있을 것 같다.</li>
-</ul>
+<p><strong>만드는 데 4초가 걸리는 허브티와 15초가 걸리는 팥빙수를 추가하기 위한 구조와 코드를 토론한다.</strong></p>
+
+<p>기존의 코드 동작 과정에서 크게 달라지는 것이 없다.<br />
+Queue에 저장되는 데이터의 type과 delay가 종류에 따라 추가되는 것 뿐이다.<br />
+Manager에서는 Barista에게 Queue에 저장된 데이터를 보내게 되고, Barista는 해당 데이터에 따라 delay*1000ms 후에 동작을 하게 되므로 기존 동작과정에서 발생하는 문제는 없다.<br />
+단, 팥빙수는 다른 제조 과정보다 오랜 시간이 걸리기 때문에 팥빙수를 담당해서 만드는 바리스타가 있도록 설계하면 더 좋은 알고리즘으로 동작할 수 있을 것 같다.</p>
 
 <!--
 # Day15 Async Cafe

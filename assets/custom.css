@@ -1,18 +1,24 @@
-@media(max-width:480px ){
-    .body{
-      font-size: 12px !important;
-  
-    }
-    .category-title{
-        font-size:1rem;
-    }
-    .post-title{
-        font-size:1.5rem !important;
-    }
-    .post-subtitle{
-      font-size:1.25rem !important;
-    }
-    .masthead{
-        margin-bottom:0px !important;
-    }
+@media screen and (max-width:480px ){
+  .nav-link{
+    padding:0px;
   }
+  html{
+    font-size:12px;
+  }
+  body{
+    font-size: 1rem !important;
+  }
+  .post-title{
+      font-size:1.5rem !important;
+  }
+  .post-subtitle{
+    font-size:1.25rem !important;
+  }
+  .masthead{
+      margin-bottom:0px !important;
+  }
+}
+
+.category-title{
+  font-size:1.5rem;
+}
