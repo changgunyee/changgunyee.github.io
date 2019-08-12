@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    부스트 캠프 Day10 - changgunyee
+    
+  </title>
+
+  <meta name="description"
+    content="VMGit DVCS 분산 저장소 방식에 대해 학습하고, 기본 동작을 구현하여 보자 1. 코드 동작 이해 객체를 이용한 코드 관리 각 Repository와 파일들을 객체로써 관리하였다. init 명령어를 실행하면 new Repository를 통해 저장소를 생성하였다. 각 디렉토리 객...">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-7578104907913978",
+            enable_page_level_ads: true
+        });
+  </script>
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+    type='text/css'>
+  <link
+    href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+    rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/fontawesome-free/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/custom.css">
+  <link rel="canonical" href="https://changgunyee.github.io/boost-camp/2019/07/30/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%94%84-Day10.html">
+  <link rel="alternate" type="application/rss+xml" title="changgunyee"
+    href="/feed.xml">
+  <style>
+    body {
+      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">changgunyee</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/develop">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+<header class="masthead"
+  style="background-image: url('/img/boost-camp.jpg')">
+  
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>부스트 캠프 Day10</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">이창권</a>
+              on July 30, 2019
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 mx-auto">
+
+        <h1 id="vmgit">VMGit</h1>
+
+<p>DVCS 분산 저장소 방식에 대해 학습하고, 기본 동작을 구현하여 보자</p>
+
+<h2>1. 코드 동작 이해</h2>
+
+<ul>
+  <li>
+    <p>객체를 이용한 코드 관리</p>
+
+    <ul>
+      <li>각 Repository와 파일들을 객체로써 관리하였다.</li>
+      <li>init 명령어를 실행하면 new Repository를 통해 저장소를 생성하였다.</li>
+      <li>각 디렉토리 객체들은 local이라는 배열을 만들어 보관하였다.</li>
+    </ul>
+
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">local</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="kd">class</span> <span class="nx">File</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">status</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Untracked</span><span class="dl">'</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">time</span> <span class="o">=</span> <span class="nx">currentTime</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">class</span> <span class="nx">Repository</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">files</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+
+    <ul>
+      <li>new 명령어를 실행하면 new File을 통해 파일을 생성시키고 이를 해당 Repository의 files에 push하여 관리하였다.</li>
+    </ul>
+
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">newRepo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Repository</span><span class="p">();</span>
+<span class="nx">local</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">newRepo</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">newFile</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">File</span><span class="p">();</span>
+<span class="nx">newRepo</span><span class="p">.</span><span class="nx">files</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">newFile</span><span class="p">);</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2>2. 코드 동작 개선</h2>
+
+<ul>
+  <li>함수형 프로그래밍에 따라 객체를 공유해야하는 상황이 아니라면 항상 객체를 deepCopy해 새로운 객체로 생성해 작업하는 것이 낫다. 성능이 떨어지지만 에러를 미연에 방지할 수 있다.</li>
+  <li>
+    <p>deepCopy하는 여러가지 방법</p>
+
+    <ul>
+      <li>객체 안에 class형의 객체가 없고, function이나 상속 받은 proto가 없이 단순한 dictionary object들을 가지고 있는 object일 경우
+        <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">newObject</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">oldObject</span><span class="p">));</span>
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p>객체가 포함하는 function이나 상속받은 내용들까지 모두 copy하는 함수(vanilla js)</p>
+
+        <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">deepCopy</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">obj</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">||</span> <span class="k">typeof</span> <span class="nx">obj</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">object</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">let</span> <span class="nx">copy</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">copy</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">deepCopy</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">key</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">copy</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>        </div>
+      </li>
+      <li>jQuery나 lodash와 같은 라이브러리 사용방법(제일 권장하는 방법)
+        <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// jQuery</span>
+<span class="kd">let</span> <span class="nx">copyObject</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="p">{},</span> <span class="nx">mainObject</span><span class="p">);</span>
+<span class="c1">// lodash</span>
+<span class="kd">let</span> <span class="nx">copyObject</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">(</span><span class="nx">mainObject</span><span class="p">);</span>
+</code></pre></div>        </div>
+      </li>
+      <li>참고URL : https://mygumi.tistory.com/322 [마이구미의 HelloWorld]</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="자신이-미션을-하면서-학습한-내용">자신이 미션을 하면서 학습한 내용</h3>
+
+<ul>
+  <li>객체를 이동하거나 변경 후 새로 저장해야할 일이 있을 때, 객체를 공유해야하는 부분이 아니라면 되도록 deep copy를 통해 새로 객체를 생성하는 것이 후에 오류를 막을 수 있다.(함수형 프로그래밍)</li>
+  <li>설계 시, 구현해야하는 내용에 맞는 디자인 패턴을 하나 골라 그에 따라 설계를 하는 것도 괜찮은 방법이다.</li>
+  <li>class를 만들 때, 되도록이면 확장성이 좋게 구현하는 것이 좋다.</li>
+</ul>
+
+<h3 id="스스로-학습할-내용">스스로 학습할 내용</h3>
+
+<p>실제 git 명령어와 구현한 명령 동작 차이점에 대해 정리한다.</p>
+
+<ul>
+  <li>
+    <p>구현한 checkout은 저장소를 이동하지만 원래 checkout은 브랜치를 이동하는 것이다.</p>
+  </li>
+  <li>
+    <p>add명령어 시, 실제 git에서는 변경된 파일을 추적해서 <code class="highlighter-rouge">add *</code> 과 같이 변경된 모든 파일을 add할 수 있는 명령어도 존재하지만, 구현한 add명령어는 명령어 뒤에 넣은 파일이 변경되었지 않더라도 무조건 add한다.</p>
+  </li>
+</ul>
+
+<h2>3. Consideration</h2>
+
+<h3 id="clone-명령을-구현하려면-어떻게-구현해야-할까">clone 명령을 구현하려면 어떻게 구현해야 할까?</h3>
+
+<ul>
+  <li>각 저장소마다 각자의 remote저장소를 따로 생성한다.</li>
+  <li>remote 저장소를 생성자 외에 접근할 수 있도록 권핞을 수정한다.</li>
+  <li>clone 하고 싶은 저장소(객체들이 저장된 파일)를 전체를 복사한다.</li>
+  <li>객체가 아닌 string, json 등의 형태로 저장된 정보들을 객체로 변환하는 과정을 거친다.</li>
+  <li>변환한 객체가 필요한 정보를 누락 없이 잘 저장하고 있는지 확인한 후, 이후의 작업을 진행한다.</li>
+</ul>
+
+<h3 id="branch-개념을-추가하려면-어떤-구조로-어떻게-구현해야-할까">branch 개념을 추가하려면 어떤 구조로 어떻게 구현해야 할까?</h3>
+
+<ul>
+  <li>master는 여러 branch객체를 리스트로 가지고 있다.</li>
+  <li>master를 상속하는 object로 각 branch를 구현한다.</li>
+  <li>각 branch object에는 branch 가 생성된 지점에 대한 정보를 가지고 있어야 한다.</li>
+  <li>branch 를 master에 merge를 할 경우 두 브랜치를 비교한 후, 코드의 충돌이 없으면 합친다. 이 때, 파일 내부적, 외부적인 충돌을 감지하는 코드가 필요할 것이다.</li>
+</ul>
+
+<h3 id="pull-명령을-구현하려며-어떤-구조로-어떻게-구현해야-할까">pull 명령을 구현하려며 어떤 구조로 어떻게 구현해야 할까?</h3>
+
+<ul>
+  <li>pull request를 queue형태로 저장한다.</li>
+  <li>FIFO방식으로 pull request의 파일을 담은 객체를 권한이 있는 사용자에게 전달한다.</li>
+  <li>사용자의 권한은 객체의 요소로 저장되어있다.</li>
+  <li>remote 저장소의 commit 내력과 local 저장소의 commit 내력을 비교한다. local 저장소의 가장 늦은 commit 다음의 이력부터 데이터를 가지고 온다.</li>
+  <li>pull하면 기존의 객체와 새로운 객체를 반복문으로 돌려가며 변경사항을 체크한다.</li>
+  <li>변경되어있으면 새로운 객체를 덮어쓴다.</li>
+  <li>immutable하게 만들기 위해 객체는 new로 생성한 후 기존의 객체는 버린다.</li>
+</ul>
+
+<!--
+
+# Day10 VMGit
+
+## 왜 필요한가?
+DVCS 분산 저장소 방식 중에서 git 방식은 가장 많이 사용하는 방식이다. 
+git 명령의 동작 방식을 이해하고, 기본 명령의 동작을 그대로 구현해보는 것이 효과적인 학습 방법이다. 
+
+## 학습 목표
+- DVCS 분산 저장소 방식에 대해 학습하고, 기본 동작을 구현하는 것이 목표다.
+- 첫 단계로 저장소를 init 하고 checkout으로 저장소를 이동하는 과정을 구현한다.
+- 파일을 생성하고, 추가하고, 커밋하는 흐름을 작성한다. 이 때 실제 파일을 생성하지는 않고 가상으로 동작을 구현한다. 
+- 로컬에 커밋한 내용을 remote에 반영하는 흐름을 구현한다.
+- 여러번 커밋한 내용을 한꺼번에 push하면, remote 마지막 커밋과 비교해서 이후 커밋만 반영한다.
+
+
+## 미션
+
+* File, Commit, Repository, Local, Remote 주요 기능을 담당하도록 module을 나누거나 class로 구분해서 작업한다.
+
+	* 입/출력을 위한 모듈 외에 모든 기능은 바닐라 자바스크립트로 구현한다.
+
+* 가상으로 git 동작을 확인하는 프로그램을 작성한다.
+
+* vmgit을 시작하면 셀 프롬프트와 비슷하게 명령을 입력받는다.
+
+### 1) init 요구사항
+
+* `init <repository_name>` 명령을 사용하면 local 영역에 `<repository_name>` 이름으로 저장소 공간을 생성한다. 
+
+* `status local <repository_name>` 명령을 사용하면 local에 있는 `<repository_name>` 저장소 내부 파일 상태를 출력한다. 
+  * 만약 입력한 저장소 이름이 없으면 전체 저장소 목록을 출력한다.
+
+* `checkout <repository_name>` 명령을 사용하면 해당 저장소를 선택한 것을 표시하기 위해서 프롬프트 뒤에 `<repository_name>` 저장소 이름을 붙여서 출력한다. 
+  * 만약 입력한 저장소 이름이 없으면 아무런 저장소를 선택하지 않은 상태로 초기 상태와 동일하게 표시한다. 
+
+### 예상 출력 화면 
+
+```
+/>init hello
+created hello repository.
+
+/>status
+hello/
+
+/>checkout hello
+/hello/>checkout
+
+/>quit
+```
+
+### 2) checkout 요구사항
+
+* checkout으로 저장소 선택한 후에 `new <file_name>` 명령을 사용하면 해당 working directory에 파일을 생성한 것으로 기록한다. 처음 생성한 파일 상태는 Untracked 상태로 표시한다. 
+
+* checkout 이후에 `status` 명령을 사용하면 Working directory / Staging Area / Git Repository 영역에 있는 파일 목록을 변경시간과 함께 출력한다. 
+  * 만약 저장소를 선택한 상태가 아니면 `status local` 처럼 동작한다.
+
+* `add <file_name>` 명령을 사용하면 생성한 파일을 staging area로 이동했다고 가정하고 Staged 상태로 표시한다.
+
+* `commit <commit_log>` 명령을 사용하면 staging area에 있는 모든 파일을 git repository에 등록한다. 커밋된 파일들을 커밋 시간과 함께 Unmodified 상태로 표시한다.
+
+### 예상 출력 화면 
+
+```
+/>init hello
+created hello repository.
+
+/>status
+hello/
+
+/>checkout hello
+/hello/>new readme
+
+hello/>status
+---Working Directory/
+readme	2019-03-26 09:28:05
+---Staging Area/
+---Git Repository/
+
+hello/>add readme
+---Staging Area/
+readme	2019-03-26 09:29:25/
+
+hello/>commit make readme file
+---commit files/
+readme	2019-03-26 09:29:25
+
+hello/>
+```
+
+### 3) touch, log 요구사항
+
+* checkout으로 선택한 저장소에서 이미 커밋한 파일에 대해 `touch <file_name>` 명령을 사용하면 파일 상태는 Modified 상태로 표시하고 Working Directory 목록에 표시한다.
+
+* `log` 명령을 사용하면 커밋 로그를 함께 커밋한 파일들 목록을 표시한다.
+
+
+### 예상 출력 화면 
+
+```
+/>status
+hello/
+
+/>checkout hello
+/hello/>touch readme
+
+hello/>add readme
+---Staging Area/
+readme	2019-03-27 12:11:01
+
+hello/>commit modified file
+---commit files/
+readme	2019-03-27 12:11:01
+
+hello/>log
+commit "make readme file"
+readme	2019-03-25 09:29:25
+commit "modified file"
+readme	2019-03-27 12:11:01
+
+hello/>
+```
+
+### 4) push 요구사항
+
+* `push` 명령을 사용하면 마지막까지 local에서 commit 한 이력과 Git Repository 파일을 모두 remote로 복사한다.
+
+* `status remote <repository_name>` 명령을 사용하면 remote에 있는 `<repository_name>` 저장소 내부 파일 목록을 출력한다. 
+  * 만약 저장소 이름이 없으면 해당 저장소가 없다고 출력한다.
+
+* vmgit 프로그램을 종료하고 다시 시작하면, remote 저장소에 있는 내용은 유지되도록 저장한다. 파일로 저장하기 위해서 적당한 npm 패키지를 찾아서 구현해도 된다.
+
+### 예상 출력 화면 
+
+```
+hello/>push
+push some commits...
+commit "make readme file" pushed
+commit "modified file" pushed
+
+hello/>status remote hello
+last commit "modified file"
+readme	2019-03-27 12:11:01
+
+hello/>checkout
+
+/>status remote
+hello/
+
+/>quit
+```
+
+
+----
+
+## 배경 지식
+
+### VCS 버전관리 시스템
+
+소스코드를 관리하는 시스템은 크게 3종류로 나눌 수 있다.
+버전관리 시스템 종류를 학습하고, 차이점을 비교해본다. 
+
+	* VCS 로컬 방식 : RCS, SCCS
+	
+	* CVCS 중앙 서버 방식 : Subversion(SVN), CVS, Perforce, ClearCase, TFS
+	
+	* DVCS 분산 저장소 방식 : Git, Mercurial, Bitkeeper, SVK, Darcs
+
+### git 
+
+- git 에서 사용하는 기본적인 용어들을 학습하고 정리한다.
+- git 명령을 이용해서 저장소 관리하는 방식을 학습하고 정리한다.
+- 변경 사항을 추가,수정,삭제하는 방식에 대해 학습하고 정리한다.
+
+> 참고자료 
+> 
+> `http://rogerdudler.github.io/git-guide/index.ko.html`
+
+### 용어
+
+다음과 같은 git 관련 용어를 학습하고 의미가 무엇인지, 어떤 동작을 해야 하는지 정리한다.
+
+> 저장소 관련
+
+| 용어 | 의미 |
+|---|---|
+| remote | _ |
+| local | _ |
+| init | _  |
+| clone | _ |
+
+> 상태 관리
+
+| 용어 | 의미 |
+|---|---|
+| git repository | _ |
+| staging area | _ |
+| working directory | _ |
+
+> 파일 관련
+
+| 용어 | 의미 |
+|---|---|
+| Untracked | _ |
+| Unmodified | _ |
+| Modified | _ |
+| Staged | _ |
+
+### 파일 상태변화
+
+Pro Git2 에 나오는 파일 상태 변화 그림
+
+![](https://git-scm.com/book/en/v2/images/lifecycle.png)
+
+* 동작에 따른 파일 상태 변화에 대해 학습한다.
+[참고 링크](https://git-scm.com/book/ko/v2/Git의-기초-수정하고-저장소에-저장하기)
+
+## 학습정리
+
+### 피어 컴파일링 체크포인트
+
+```
+	1. [ ] init 명령으로 local 영역에 저장소 생성
+	2. [ ] status 명령으로 저장소 목록 확인
+	3. [ ] checkout 명령으로 저장소 선택
+	4. [ ] new 명령으로 untracked 파일 생성
+	5. [ ] 저장소 선택 이후 status 명령으로 파일 목록 확인
+	6. [ ] add 명령으로 stage 영역으로 파일 옮기기
+	7. [ ] commit 명령으로 저장 공간에 여러 파일 옮기기
+	8. [ ] touch 명령으로 저장 공간에 있는 파일 수정
+	9. [ ] log 명령으로 커밋 목록 확인
+	10. [ ] push 명령으로 local 커밋 목록을 remote로 복사
+	11. [ ] status remote 명령으로 remote 저장소 / 파일 목록 확인
+	12. [ ] remote 저장소 데이터 파일 저장
+	13. [ ] 명령/상태에 대한 안전한 예외 처리 (멈추지 않고 동작하기)
+```
+
+### 스스로 확인할 사항
+
+- 실제 git 명령어와 구현한 명령 동작 차이점에 대해 정리한다.
+
+### 다같이 확인할 사항
+
+- clone 명령을 구현하려면 어떻게 구현해야 할까?
+- branch 개념을 추가하려면 어떤 구조로 어떻게 구현해야 할까?
+- pull 명령을 구현하려며 어떤 구조로 어떻게 구현해야 할까?
+-->
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left"
+            href="/boost-camp/2019/07/29/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%94%84-Day9.html" data-toggle="tooltip"
+            data-placement="top" title="부스트 캠프 Day9">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/boost-camp/2019/07/31/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%94%84-Day11.html"
+            data-toggle="tooltip" data-placement="top" title="부스트 캠프 Day11">Next<span
+              class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+        
+        <div id="disqus_thread"></div>
+          <script>
+
+          /**
+          *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+          *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+          /*
+          var disqus_config = function () {
+          this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+          this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+          };
+          */
+          (function() { // DON'T EDIT BELOW THIS LINE
+          var d = document, s = d.createElement('script');
+          s.src = 'https://https-changgunyee-github-io.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+          })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+        
+        </div>
+      </div>
+    </div>
+      
+  <script id="dsq-count-scr" src="//https-changgunyee-github-io.disqus.com/count.js" async></script>
+  <style>
+    img{
+      display:block;
+      margin:0px auto;
+      width:80%;
+    }
+    #disqus_thread{
+      margin-top:2rem;
+    }
+  </style>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="mailto:minyoung403@naver.com">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="far fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/changgunyee">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://instagram.com/char_quen">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          <li class="list-inline-item">
+              <a href="https://www.buymeacoffee.com/changgunyee" target="_blank">
+                <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee"style="height: auto !important;width: auto !important;display:inline-block;">
+              </a>
+          </li>
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; 이창권 2019</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145057839-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-145057839-1');
+</script>
+
+</body>
+
+</html>

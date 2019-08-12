@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    부스트 캠프 Day12 - changgunyee
+    
+  </title>
+
+  <meta name="description"
+    content="Canvas 웹 브라우저를 비롯한 클라이언트 화면은 2차원 좌표시스템을 따르고 있다. 2차원 좌표 시스템 상에 점, 선, 면, 텍스트, 이미지 등을 그리고 회전하고 이동하는 시스템에 대해 학습해 보자. 1. 코드 동작 이해 너비 600, 높이 400으로 캔버스를 생성하고 녹색으로 ...">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-7578104907913978",
+            enable_page_level_ads: true
+        });
+  </script>
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+    type='text/css'>
+  <link
+    href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+    rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/fontawesome-free/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/custom.css">
+  <link rel="canonical" href="https://changgunyee.github.io/boost-camp/2019/08/01/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%94%84-Day12.html">
+  <link rel="alternate" type="application/rss+xml" title="changgunyee"
+    href="/feed.xml">
+  <style>
+    body {
+      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">changgunyee</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/develop">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+<header class="masthead"
+  style="background-image: url('/img/boost-camp.jpg')">
+  
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>부스트 캠프 Day12</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">이창권</a>
+              on August 01, 2019
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 mx-auto">
+
+        <h1 id="canvas">Canvas</h1>
+
+<p>웹 브라우저를 비롯한 클라이언트 화면은 2차원 좌표시스템을 따르고 있다. 
+2차원 좌표 시스템 상에 점, 선, 면, 텍스트, 이미지 등을 그리고 회전하고 이동하는 시스템에 대해 학습해 보자.</p>
+
+<h2 id="1-코드-동작-이해">1. 코드 동작 이해</h2>
+<ol>
+  <li>너비 600, 높이 400으로 캔버스를 생성하고 녹색으로 색칠한다.</li>
+  <li>좌측 상단에 흰색 배경색으로 circle을 그려 얼굴을 만든다.</li>
+  <li>동일한 반지름 크기로 원호를 그려 입을 만든다.</li>
+  <li>작은 반지름으로 눈 모양을 만든다.</li>
+  <li>지름과 같은 크기로 정사각형을 그려 몸통을 만들고 Gradient로 표현한다.</li>
+  <li>아랫 부분은 검정색 굵은 직선으로 다리 부분을 만들고 오른쪽 다리는 점선으로 변경한다.
+    <pre><code class="language-javascript="> ctx.beginPath() 
+ // -&gt; 경로 그리기... 
+ ctx.stroke() 
+ //또는 ctx.fill()
+</code></pre>
+  </li>
+  <li>간단한 문자열을 얼굴 옆에 그리고 -330도 회전한다.
+    <pre><code class="language-javascript=">ctx.translate(450, 70); //중점으로 이동
+ctx.rotate((Math.PI/180)*330); // 회전
+ctx.translate(-450,-70); // 복귀 
+</code></pre>
+  </li>
+  <li>7개의 직선을 연결하여 화살표 모양을 만들고 화살표 좌측 아래를 기준으로 30도 회전한다.
+    <pre><code class="language-javascript=">function drawArrow(x, y) {
+ ctx.beginPath();
+ ctx.moveTo(x, y);
+ ctx.lineTo(x + 70, y);
+ ctx.lineTo(x + 70, y - 20);
+ ctx.lineTo(x + 120, y + 10);
+ ctx.lineTo(x + 70, y + 40);
+ ctx.lineTo(x + 70, y + 20);
+ ctx.lineTo(x, y + 20);
+ ctx.lineTo(x, y);
+ ctx.fillStyle = 'gray';
+ ctx.fill();
+}
+</code></pre>
+  </li>
+  <li>화살표 아래에는 유명한 미술작품 이미지를 몸통 정사각형 높이 혹은 너비와 같도록 이미지 비율을 맞춰서 그린다.
+    <pre><code class="language-javascript=">function scaleImageSize(img, x, y, len) {
+ let width, height;
+ if (img.width &gt; img.height) {
+     width = len;
+     height = img.hight * len / img.width;
+     return [x, y + (len - height) / 2, width, height];
+ } else {
+     width = img.width * len / img.height;
+     height = len;
+     return [x + (len - width) / 2, y, width, height];
+ }
+}
+</code></pre>
+  </li>
+  <li>캔버스로 그린 것을 jpg 또는 png 이미지 파일로 저장한다.
+    <pre><code class="language-javascript=">function saveToImageFile() {
+const out = fs.createWriteStream(__dirname + '/9.png');
+const stream = canvas.createPNGStream();
+stream.on('data', function (chunk) {
+    out.write(chunk);
+});
+}
+</code></pre>
+    <h2 id="2-코드-동작-개선">2. 코드 동작 개선</h2>
+  </li>
+</ol>
+
+<ul>
+  <li>canvas API의 다양한 사용법을 익힐 수 있었다.</li>
+  <li>파일을 저장하고 불러올 때, stream을 사용할 수 있다.</li>
+  <li>엄청 큰 데이터를 다룰 때나, 외부 소스로부터 데이터를 한번에 한 청크(chunk)씩 가져올때 stream을 사용해야 하며, 사용할 줄 알아야 한다.</li>
+</ul>
+
+<h2 id="3-consideration">3. Consideration</h2>
+<h3 id="3-1-스스로-확인할-사항">3-1. 스스로 확인할 사항</h3>
+<h4 id="canvas-api-종류들에-대해-학습하고-정리한다">CANVAS API 종류들에 대해 학습하고 정리한다.</h4>
+
+<ul>
+  <li>Drawing Shapes
+    <ul>
+      <li>기본적으로 beginPath()함수와 closePath(), arc(), moveTo(), lineTo(), fill()함수로 모든 것을 그릴 수가 있다.</li>
+      <li>편하게 사각형을 그릴 때 쓸 수 있는 함수가 존재한다.(fillRect()함수)</li>
+    </ul>
+  </li>
+  <li>Drawing text
+    <ul>
+      <li>fillText(), strokeText()함수로 텍스트를 생성할 수 있다.</li>
+    </ul>
+  </li>
+  <li>Using Images
+    <ul>
+      <li>new Image()로 Image객체를 생성해 받아온 이미지를 조작할 수 있다.</li>
+      <li>drawImage()함수의 인자 개수를 조절해 scaling, slicing을 할 수 있다.</li>
+    </ul>
+  </li>
+  <li>Transformaitons
+    <ul>
+      <li>save(), restore()함수로 canvas의 현재상태를 저장하고 복원할 수 있다.</li>
+      <li>translate()함수로 canvas의 시작이 되는 origin좌표를 조절할 수 있다.</li>
+      <li>rotate(), transform(), scale()함수로 변형이 가능하다.</li>
+    </ul>
+  </li>
+  <li>Animations
+    <ul>
+      <li>기존의 setInterval(),setTimeout()을 사용해도 되지만, requestAnimationFrame을 사용해서 만들 수도 있다.</li>
+    </ul>
+  </li>
+  <li>Pixel manipulation
+    <ul>
+      <li>ImageData객체를 이용해 픽셀의 정보를 받아올 수 있고, 해당 픽셀에 대해 다양한 조작이 가능하다</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="3-2-다같이-확인할-사항">3-2. 다같이 확인할 사항</h3>
+<h4 id="1svg-개념에-대해-학습하고-canvas-2d-api와-비교해서-정리한다">1.SVG 개념에 대해 학습하고 CANVAS 2D API와 비교해서 정리한다.</h4>
+<h4 id="2다양한-이미지-파일-포맷에-대해-학습하고-정리한다">2.다양한 이미지 파일 포맷에 대해 학습하고 정리한다.</h4>
+
+<h4 id="svg">SVG</h4>
+<ul>
+  <li>canvas의 성능은 픽셀 수가 많을 경우(&gt;10k)에 좋고, svg의 성능은 픽셀 수가 적을 경우(&lt;10k)에 좋다.</li>
+  <li>canvas는 고성능의 애니메이션 작업이나 동영상 조작 등의 작업에 유리하고, svg는 고품질의 문서작업이나 정적 이미지의 조작에 유리하다.</li>
+  <li>canvas는 스크립트를 통해서만 작업이 가능하고, svg는 css를 통해서도 작업이 가능하다.</li>
+  <li>canvas는 픽셀(pixel) 기반이지만 svg는 모양(shape) 기반이다.</li>
+  <li>같은 픽셀의 화면에 같은 수의 점을 그리는 실험 시, canvas가 HTML이나 SVG보다 훨씬 빠르고 성능이 좋다. 특히 픽셀이 많아질 수록 그 차이는 훨씬 커지며 canvas가 월등히 좋은 성능을 보인다.
+    <h4 id="다양한-이미지-파일-포맷">다양한 이미지 파일 포맷</h4>
+  </li>
+  <li>BMP
+    <ul>
+      <li>이미지 파일을 무손실 이미지로 저장이 가능하다.</li>
+      <li>‘반복 문자열 제거’ 압축 기법 때문에 호율이 좋지는 않다</li>
+      <li>따라서 용량은 크지만 호환성이 매우 좋다.</li>
+    </ul>
+  </li>
+  <li>GIF
+    <ul>
+      <li>웹 상에서 가장 널리 사용되는 이미지 포맷</li>
+      <li>Animation GIF로 움직이는 이미지로 주로 사용된다.</li>
+      <li>비손실 압축, 인덱스 컬러기반의 비트맵 이미지 파일 포멧</li>
+    </ul>
+  </li>
+  <li>JPEG
+    <ul>
+      <li>무손실 압축이 아니지만 하지만 효율적인 압축률을 보여준다.</li>
+      <li>손실은 있지만 원본 이미지와 차이가 크지 않기 때문에 가장 대중적인 포맷</li>
+    </ul>
+  </li>
+  <li>PNG
+    <ul>
+      <li>GIF를 대체하기 위해 만들어진 오픈소스 파일 포맷이다.(특허 관련 문제)</li>
+      <li>JPEG와 비교해서 무손실 압축이기 때문에 비슷한 색이 넓게 사용될 때 유리하다.</li>
+    </ul>
+  </li>
+</ul>
+
+<!--
+  # Day12 Canvas
+
+## 왜 필요한가?
+웹 브라우저를 비롯한 클라이언트 화면은 2차원 좌표시스템을 따르고 있다. 
+2차원 좌표 시스템 상에 점, 선, 면, 텍스트, 이미지 등을 그리고 회전하고 이동하는 시스템에 대해 학습해야 자유롭게 표시할 수 있다.
+
+## 학습 목표
+- 2D 그래픽스와 캔버스에 대한 기초 지식에 대해 학습한다.
+- 캔버스에 직접 점, 선, 면, 텍스트를 그리고, 회전하고 이동하는 변환 동작을 구현하는 것이 목표다.
+- 색상 개념을 이해하고 Gradient로 색칠하도록 구현하는 것이 목표다.
+
+## 미션
+
+#### 1) Background 요구사항
+
+<img src="http://public.codesquad.kr/jk/cs23/step19-1.canvas.png" width="500">
+
+- 가로 600 x 세로 400 캔버스를 생성한다.
+
+- 캔버스 배경 색상을 녹색으로 가득 색칠한다.
+
+- 좌측 상단에 흰색 배경색으로 Circle을 그린다.
+
+- 동일한 반지름 크기로 Pie를 그리고 내부만 검정색으로 색칠한다.
+
+- 작은 반지름으로 눈 모양을 그린다.
+
+- 지름과 같은 크기로 정사각형을 그리고 흰색으로 색칠한다.
+
+- 아랫 부분은 검정색 굵은 직선으로 다리 부분을 그린다.
+
+- 캔버스로 그린 것은 jpg 또는 png 이미지 파일로 저장한다.
+
+#### 2) Text 요구사항
+
+<img src="http://public.codesquad.kr/jk/cs23/step19-2.canvas.png" width="500">
+
+
+- 앞 단계에서 입 부분 Pie 부분을 남색으로 변경한다.
+
+- 몸통 부분은 Gradient로 두 가지 색을 사용해서 점진적으로 색칠한다.
+
+- 아랫 부분 오른쪽 다리는 실선에서 점선으로 변경한다.
+
+- 간단한 문자열을 원 앞에 그린다. 문자열 색상을 지정한다.
+
+### 3) Transform 요구사항
+
+<img src="http://public.codesquad.kr/jk/cs23/step19-3.canvas.png" width="500">
+
+- 문자열을 문자열 중점을 기준으로 -330도 회전한다.
+
+- 우측에 직선 7개를 연결해서 ⇨ 화살표 모양을 그린다. 내부는 회색으로 색칠한다.
+
+- 화살표는 화살표 좌측 아래를 기준으로 30도 회전한다.
+
+- 화살표 아래에는 유명한 미술작품 이미지를 좌측 정사각형 높이 혹은 너비와 같도록 이미지 비율을 맞춰서 그린다. 만약 세로 그림이면 좌우가 여백이 생기고, 가로 그림이면 위아래가 여백이 생긴다.
+
+## 배경 지식
+
+- 수학 2차원 직교 좌표시스템과 해당 그래픽 시스템 좌표시스템 차이에 대해 학습한다.
+
+- 2차원 좌표시스템에서 점, 선, 도형, 텍스트, 이미지 등을 표시하는 방법을 학습한다.
+
+- 2차원 좌표시스템에서 좌표를 translate, scale, rotate 하는 방법과 Affine Transform 으로 변환시키는 방법을 학습한다.
+
+- 2D 그래픽스 그리기 동작을 위한 캔버스 관련 API에 대해 학습한다.
+
+- Javascript + Web Canvas API 표준과 node 기반 구현 자료를 학습한다.
+  
+
+## 학습정리
+
+### 피어 컴파일링 체크포인트
+
+```
+  1. [ ] 캔버스 배경색 색칠
+  2. [ ] 얼굴 모양 - 원 그리기
+  3. [ ] 입모양 - 원호 그리기
+  4. [ ] 눈모양 - 원 그리기
+  5. [ ] 몸통 - 사각형 + 그라데이션 색칠
+  6. [ ] 다리 - 실선과 점선 그리기
+  7. [ ] 말풍선 - 텍스트 및 rotate 회전
+  8. [ ] 화살표 - closed path 그리기 및 회전
+  9. [ ] 미술작품 - 이미지 비율에 맞춰 그리기
+  10. [ ] 이미지 파일 저장 기능
+```
+
+### 스스로 확인할 사항
+
+- CANVAS API 종류들에 대해 학습하고 정리한다.
+
+### 다같이 확인할 사항
+
+- SVG 개념에 대해 학습하고 CANVAS 2D API와 비교해서 정리한다.
+- 다양한 이미지 파일 포맷에 대해 학습하고 정리한다.
+-->
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left"
+            href="/boost-camp/2019/07/31/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%94%84-Day11.html" data-toggle="tooltip"
+            data-placement="top" title="부스트 캠프 Day11">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/boost-camp/2019/08/05/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%94%84-Day13.html"
+            data-toggle="tooltip" data-placement="top" title="부스트 캠프 Day13">Next<span
+              class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+        
+        <div id="disqus_thread"></div>
+          <script>
+
+          /**
+          *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+          *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+          /*
+          var disqus_config = function () {
+          this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+          this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+          };
+          */
+          (function() { // DON'T EDIT BELOW THIS LINE
+          var d = document, s = d.createElement('script');
+          s.src = 'https://https-changgunyee-github-io.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+          })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+        
+        </div>
+      </div>
+    </div>
+      
+  <script id="dsq-count-scr" src="//https-changgunyee-github-io.disqus.com/count.js" async></script>
+  <style>
+    img{
+      display:block;
+      margin:0px auto;
+      width:80%;
+    }
+    #disqus_thread{
+      margin-top:2rem;
+    }
+  </style>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="mailto:minyoung403@naver.com">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="far fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/changgunyee">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://instagram.com/char_quen">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          <li class="list-inline-item">
+              <a href="https://www.buymeacoffee.com/changgunyee" target="_blank">
+                <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee"style="height: auto !important;width: auto !important;display:inline-block;">
+              </a>
+          </li>
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; 이창권 2019</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145057839-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-145057839-1');
+</script>
+
+</body>
+
+</html>

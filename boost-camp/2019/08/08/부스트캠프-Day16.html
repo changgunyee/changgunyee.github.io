@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    부스트 캠프 Day16 - changgunyee
+    
+  </title>
+
+  <meta name="description"
+    content="Text Browser URI/URL 표준 규격을 학습하고, URL 문자열을 분석해서 처리하는 라이브러리를 직접 구현하여 보자 1. 코드 동작 이해 url string이 주어졌을 때, 이를 요소별로 나누어 주는 Parsing URL class를 생성 정규표현식을 이용하여 검사와 U...">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-7578104907913978",
+            enable_page_level_ads: true
+        });
+  </script>
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+    type='text/css'>
+  <link
+    href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+    rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/fontawesome-free/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/custom.css">
+  <link rel="canonical" href="https://changgunyee.github.io/boost-camp/2019/08/08/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%94%84-Day16.html">
+  <link rel="alternate" type="application/rss+xml" title="changgunyee"
+    href="/feed.xml">
+  <style>
+    body {
+      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">changgunyee</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/develop">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+<header class="masthead"
+  style="background-image: url('/img/boost-camp.jpg')">
+  
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>부스트 캠프 Day16</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">이창권</a>
+              on August 08, 2019
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 mx-auto">
+
+        <h1 id="text-browser">Text Browser</h1>
+
+<p>URI/URL 표준 규격을 학습하고, URL 문자열을 분석해서 처리하는 라이브러리를 직접 구현하여 보자</p>
+
+<h2 id="1-코드-동작-이해">1. 코드 동작 이해</h2>
+<ul>
+  <li>url string이 주어졌을 때, 이를 요소별로 나누어 주는 Parsing URL class를 생성
+    <ul>
+      <li>정규표현식을 이용하여 검사와 URL 분석을 수행한다.</li>
+      <li>mocha 라이브러리를 사용하여 테스트 케이스를 작성하고 TDD를 수행한다.
+        <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nx">describe</span><span class="p">(</span><span class="dl">"</span><span class="s2">URL</span><span class="dl">"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">URL</span><span class="p">(</span>
+  <span class="dl">"</span><span class="s2">http://user_name:pass-word@boostcamp.connect-foundation.or.kr:2019/first/second/last?query=ab&amp;param=12</span><span class="dl">"</span>
+<span class="p">);</span>
+<span class="nx">it</span><span class="p">(</span><span class="dl">"</span><span class="s2">host</span><span class="dl">"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">host</span><span class="p">,</span> <span class="dl">"</span><span class="s2">boostcamp.connect-foundation.or.kr</span><span class="dl">"</span><span class="p">));</span>
+<span class="nx">it</span><span class="p">(</span><span class="dl">"</span><span class="s2">lastPathComponent</span><span class="dl">"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">lastPathComponent</span><span class="p">,</span> <span class="dl">"</span><span class="s2">last</span><span class="dl">"</span><span class="p">));</span>
+<span class="nx">it</span><span class="p">(</span><span class="dl">"</span><span class="s2">pathComponents</span><span class="dl">"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">pathComponents</span><span class="p">,</span> <span class="p">[</span><span class="dl">"</span><span class="s2">/</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">first</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">second</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">last</span><span class="dl">"</span><span class="p">]));</span>
+<span class="nx">it</span><span class="p">(</span><span class="dl">"</span><span class="s2">port</span><span class="dl">"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">port</span><span class="p">,</span> <span class="mi">2019</span><span class="p">));</span>
+<span class="nx">it</span><span class="p">(</span><span class="dl">"</span><span class="s2">query</span><span class="dl">"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">query</span><span class="p">,</span> <span class="dl">"</span><span class="s2">query=ab&amp;param=12</span><span class="dl">"</span><span class="p">));</span>
+<span class="p">});</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>XHttpRequest 객체의 역할을 하는 HttpRequest class를 생성
+    <ul>
+      <li>입력받은 URL에서 필요한 부분들을 this 객체에 저장한다.</li>
+      <li>사용자에게 입력받을 option과 default 옵션을 구현한다.</li>
+      <li>net과 dns 모듈을 사용하여 생성자에서 결과를 저장할 수 있도록 설정한다.
+```javascript
+const client = net.connect({port:80, host:ip}, function() {
+  console.log(‘connected to server!’);<br />
+  const msg = <code class="highlighter-rouge">GET / HTTP/1.1</code></li>
+      <li><code class="highlighter-rouge">\r\nAccept: text/html</code></li>
+      <li><code class="highlighter-rouge">\r\nHost: ${addr}</code></li>
+      <li><code class="highlighter-rouge">\r\nUser-Agent: Mozilla/5.0\r\n\r\n</code>
+  console.log(msg);
+  client.write(msg);
+});
+```</li>
+    </ul>
+  </li>
+  <li>XHttpResponse 객체의 역할을 하는 HttpResponse class를 생성
+    <ul>
+      <li>HttpRequest객체를 사용해서 서버로부터 받은 데이터를 HttpResponse에서 처리해준다.</li>
+      <li>Buffer형태로 데이터를 받기 때문에 Buffer객체를 사용해서 처리한다.
+  ```javasctipt
+  class HTTPResponse {
+      constructor() {
+      this.statusCode;
+      this.responseLine;
+      this.contentLength;
+      this.header;
+      this.body;
+  }
+  };</li>
+    </ul>
+
+    <p>module.exports = HTTPResponse;
+  ```</p>
+  </li>
+  <li>socket 통신 방법
+    <ul>
+      <li>url string이 주어졌을 때, URL class를 이용하여 분석을 해 요소로 나눈다.</li>
+      <li>URL객체의 host를 받아 dns module을 이용해서 ip를 받는다.</li>
+      <li>node의 net module을 이용해서, client를 만들고 socket을 만들어 HttpRequest 객체를 생성해 서버로 전달해준다.</li>
+      <li>서버에서 받은 데이터를 parsing해 HttpResponse객체를 만들어 콘솔에 출력해 준다.
+  ```
+  HTTPResponse {
+header:
+ ‘HTTP/1.1 200 \r\nServer: nginx/1.6.0\r\nDate: Fri, 09 Aug 2019 01:53:51 GMT\r\nContent-Type: text/html;charset=UTF-8\r\nContent-Length: 128302\r\nConnection: keep-alive\r\nKeep-Alive: timeout=5\r\nVary: Accept-Encoding\r\nX-Application-Context: application:set1:8081\r\nCache-Control: no-store\r\nSet-Cookie: _TUID=247D3ABD-F06E-4F68-B615-132B81F5126F; Expires=Mon, 06-Aug-2029 01:53:51 GMT; Path=/\r\nSet-Cookie: _ZUT=nc%3D82c11590530; Domain=.zum.com; Path=/\r\nSet-Cookie: czi=””; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/\r\nSet-Cookie: bakeryStamp=1; Expires=Mon, 06-Aug-2029 01:53:51 GMT; Path=/\r\nSet-Cookie: p=0; Path=/\r\n\r\n’,
+body:</li>
+    </ul>
+    <p>&lt;Buffer 3c 21 44 4f 43 54 59 50 45 20 42 4f 44 59 3e 0a 3c 68 74 6d 6c 20 6c 61 6e 67 3d 22 6b 6f 22 20 63 6c 61 73 73 3d 22 22 3e 0a 3c 68 65 61 64 3e 0a 3c … &gt;,
+statusCode: 200,
+responseLine: ‘HTTP/1.1 200’,
+contentLength: 128302 }
+  ```</p>
+    <h2 id="2-코드-동작-개선">2. 코드 동작 개선</h2>
+  </li>
+</ul>
+
+<p>이창권</p>
+<ul>
+  <li>response를 받을 때의 data를 stream을 사용해서 받아야 한다. content-length를 비교할 때, string으로 바꾸면 데이터의 손실이 일어나기 때문에 stream을 사용해서 받아야 한다.</li>
+  <li>url class 객체 예외 처리시 test 코드를 구성해서 test하면 효율적이다.</li>
+</ul>
+
+<h2 id="3-consideration">3. Consideration</h2>
+
+<h3 id="스스로-확인할-사항">스스로 확인할 사항</h3>
+
+<h4 id="url-구성-요소에-대해-학습한다">URL 구성 요소에 대해 학습한다.</h4>
+<ul>
+  <li>
+    <스킴>://<사용자이름>:<비밀번호>@<호스트>:<포트>/<경로>?<질의>#<프레그먼트>
+</프레그먼트></질의></경로></포트></호스트></비밀번호></사용자이름></스킴>
+  </li>
+  <li>스킴 ( scheme )
+    <ul>
+      <li>사용할 프로토콜을 말하며, 리소스에 어떻게 요청, 접근할 것인지를 명시한다. 웹에서는 주로 HTTP 프로토콜을 사용한다.</li>
+    </ul>
+  </li>
+  <li>사용자 이름과 비밀번호
+    <ul>
+      <li>어떤 서버들은 자신이 가지고 있는 데이터에 접근하기 위해서 사용자의 이름과 비밀번호를 요구한다.</li>
+      <li>만약 웹 서버에서 사용자이름과 비밀번호를 요구하는 URL 스킴을 사용함에도 클라이언트가 이를 명시하지 않고 URL에 접근한다면, 기본값으로 “사용자 이름 : anonumous , 비밀번호는 브라우저에서 제공하는 기본 값”을 따르게 된다.</li>
+    </ul>
+  </li>
+  <li>호스트와 포트
+    <ul>
+      <li>하나의 Host( 컴퓨터 )에는 여러 개의 Process( 프로그램 )이 각각의 Socket( 소켓 )을 사용하여 데이터 통신을 하고 있기 때문에, 각각의 소켓을 구분할 필요가 있습니다. 이 때 소켓을 구분하는 역할을 하는 것이 Port( 포트 )이다.</li>
+    </ul>
+  </li>
+  <li>경로
+    <ul>
+      <li>호스트에서 제공하는 자원의 경로를 의미한다.</li>
+    </ul>
+  </li>
+  <li>질의
+    <ul>
+      <li>Query String( 쿼리 스트링 )이라고도 한다.</li>
+      <li>클라이언트가 자원을 GET 방식으로 요청할 때, 필요한 데이터를 함께 넘겨 줄 목적으로 사용한다.</li>
+    </ul>
+  </li>
+  <li>프래그먼트
+    <ul>
+      <li>HTML에는 각각의 요소에 id 속성을 부여할 수 있는데, URL에 프래그먼트를 전달하면 페이지가 해당 id가 있는 곳으로 스크롤이 이동하게 된다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="다양한-url-케이스를-어떻게-처리하는지-확인한-방법을-정리한다">다양한 URL 케이스를 어떻게 처리하는지 확인한 방법을 정리한다.</h4>
+<ul>
+  <li>HTTP(URI)
+    <ul>
+      <li>스키마, 도메인, 포트, 경로, 쿼리, 프래그먼트로 구성되어 있다.</li>
+    </ul>
+  </li>
+  <li>FILE
+    <ul>
+      <li>URL과는 달리 보통 절대 경로명을 써주는데 ‘://’ 다음에 ‘/’로 시작한다. ‘/dir1/dir2/file’은 자신의 컴퓨터에 있는 ‘dir1\dir2'에 있는 file이라는 파일을 나타낸다. 호스트 주소를 적어주게 되면 FTP 서비스로 동작한다.</li>
+    </ul>
+  </li>
+  <li>FTP
+    <ul>
+      <li>Anonymouse FTP 서버에서 파일을 지정할 때 사용한다.</li>
+      <li>ftp://로 시작한다</li>
+    </ul>
+  </li>
+  <li>Telnet
+    <ul>
+      <li>텔넷도 ftp와 비슷하며 통신을할 때 주로 쓰인다.</li>
+      <li>telnet://로 시작한다.
+        <h4 id="http-request-종류와-http-response-종류에-대해-학습하고-정리한다">HTTP Request 종류와 HTTP Response 종류에 대해 학습하고 정리한다.</h4>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>HTTP Request정보</p>
+
+    <ul>
+      <li>
+        <p>요청 URL 정보(method, URL HTTP버전)</p>
+      </li>
+      <li>
+        <p>사용자 웹 브라우져 종류</p>
+      </li>
+      <li>
+        <p>요청 데이터 타입 (응답의 Content-type과 유사)</p>
+      </li>
+      <li>
+        <p>쿠키(인증 정보)</p>
+      </li>
+      <li>
+        <p>경유지 URL</p>
+      </li>
+      <li>
+        <p>요청 도메인</p>
+      </li>
+      <li>
+        <p>example</p>
+      </li>
+      <li>
+        <div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">GET</span> <span class="nn">/index.html</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">MSIE 6.0; Window NT 5.0</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">test/html</span>
+<span class="na">Cookie</span><span class="p">:</span> <span class="s">name=value</span>
+<span class="na">Refere</span><span class="p">:</span> <span class="s">http://abc.com</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">www.abc.com</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>HTTP Request 종류</p>
+
+    <ul>
+      <li>
+        <p>GET : 요청받은 URI의 정보를 검색하여 응답한다.</p>
+      </li>
+      <li>
+        <p>HEAD : GET방식과 동일하지만, 응답에 BODY가 없고 응답코드와 HEAD만 응답한다.</p>
+
+        <p>웹서버 정보확인, 헬스체크, 버젼확인, 최종 수정일자 확인등의 용도로 사용된다.</p>
+      </li>
+      <li>
+        <p>POST : 요청된 자원을 생성(CREATE)한다. 새로 작성된 리소스인 경우 HTTP헤더 항목 Location : URI주소를 포함하여 응답.</p>
+      </li>
+      <li>
+        <p>PUT : 요청된 자원을 수정(UPDATE)한다. 내용 갱신을 위주로 Location : URI를 보내지 않아도 된다. 클라이언트측은 요청된 URI를 그대로 사용하는 것으로 간주함.</p>
+      </li>
+      <li>
+        <p>PATCH : PUT과 유사하게 요청된 자원을 수정(UPDATE)할 때 사용한다. PUT의 경우 자원 전체를 갱신하는 의미지만, PATCH는 해당자원의 일부를 교체하는 의미로 사용.</p>
+      </li>
+      <li>
+        <p>DELETE : 요청된 자원을 삭제할 것을 요청함.  (안전성 문제로 대부분의 서버에서 비활성)</p>
+      </li>
+      <li>
+        <p>CONNECT : 동적으로 터널 모드를 교환, 프락시 기능을 요청시 사용</p>
+      </li>
+      <li>
+        <p>TRACE : 원격지 서버에 루프백 메시지 호출하기 위해 테스트용으로 사용</p>
+      </li>
+      <li>
+        <p>OPTIONS : 웹서버에서 지원되는 메소드의 종류를 확인할 경우 사용</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>HTTP Response 정보</p>
+
+    <ul>
+      <li>
+        <p>프로토콜 버젼 및 응답코드</p>
+      </li>
+      <li>
+        <p>웹 서버 정보</p>
+      </li>
+      <li>
+        <p>MIME 타입</p>
+      </li>
+      <li>
+        <p>HTTP BODY 사이즈</p>
+      </li>
+      <li>
+        <p>HTTP BODY 컨텐츠</p>
+      </li>
+      <li>
+        <p>example</p>
+      </li>
+      <li>
+        <div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Server</span><span class="p">:</span> <span class="s">Apache</span>
+<span class="na">Content-type</span><span class="p">:</span> <span class="s">text/html</span>
+<span class="na">Content-length</span> <span class="p">:</span> <span class="s">1593</span>
+<span class="s">&lt;html&gt;&lt;head&gt;.....</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>HTTP Response 종류</p>
+
+    <ul>
+      <li><img src="https://i.imgur.com/8tk1YRv.png" alt="" /></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="다같이-확인할-사항">다같이 확인할 사항</h3>
+
+<h4 id="웹-브라우저가-동작하는-과정을-개발자-화면에서-확인하고-학습한다">웹 브라우저가 동작하는 과정을 개발자 화면에서 확인하고 학습한다.</h4>
+<p>웹 브라우저는 GET 요청을 받았을 때 해당 사이트 한 군대에만 요청을 보내는 것이 아니라, 해당 페이지에서 필요한 모든 리소스들에게 요청들을 보내게 된다.
+요청마다 아래와 같은 각기 다른 request와 response를 받는다.
+또한 브라우저에서 페이지 변동 없이, 간단한 조작에도 다양한 request를 보내는 것을 확인할 수 있다.</p>
+
+<p>개발자 도구의 Network 탭에서 아래와 같은 화면을 확인할 수 있다.
+각 요청마다 클릭 시 Header, Response, Cookies 등을 확인할 수 있다.
+<img src="https://i.imgur.com/tmMSMHO.png" alt="" /></p>
+
+<h4 id="리눅스유닉스-환경에서-wget-이나-curl-명령-사용방식에-대해-학습한다">리눅스/유닉스 환경에서 wget 이나 curl 명령 사용방식에 대해 학습한다.</h4>
+<p>wget : 웹 서버로부터 콘텐츠를 가져오는 프로그램.
+curl : 다양한 프로토콜을 이용하여 데이터를 전송하기 위한 명령 줄 도구를 제공하는 프로젝트.</p>
+<ul>
+  <li>공통점
+    <ul>
+      <li>FTP, HTT, HTTPS 로 자료를 전송할 수 있다.</li>
+      <li>HTTP POST 요청을 보낼 수 있다.</li>
+      <li>HTTP 쿠키를 지원한다.</li>
+      <li>스크립트처럼 사용자와 상호작용없이 작동한다.</li>
+      <li>오픈소스이며 무료다.</li>
+      <li>메타링크를 지원한다.</li>
+    </ul>
+  </li>
+  <li>차이점
+    <ul>
+      <li>cURL
+        <ul>
+          <li>라이브러리가 존재한다.</li>
+          <li>사용자가 지정한 url만 전송한다.</li>
+          <li>더 다양한 프로토콜을 지원한다.</li>
+          <li>자동압축해제를 지원한다.</li>
+          <li>HTTP/2를 지원한다.</li>
+        </ul>
+      </li>
+      <li>Wget
+        <ul>
+          <li>라이브러리가 없다.</li>
+          <li>디렉토리 구조와 파일을 그대로 복사해온다.</li>
+          <li>GNU 프로젝트의 일부이다.</li>
+          <li>큰 옵션없이 URL을 받을 수 있다.</li>
+          <li>Public Suffix List를 활용한다.</li>
+          <li>proxy에 기본 인증을 지원한다.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>사용법</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Wget https://ko.wikipedia.org/wiki/Wget
+# example.com의 "index.html" 제목 페이지를
+# 파일로 내려받기
+wget http://www.example.com/
+# GNU FTP 사이트로부터 Wget의 소스 코드 내려받기.
+wget ftp://ftp.gnu.org/pub/gnu/wget/wget-latest.tar.gz
+더 복잡한 예로는 여러 URL을 하나의 디렉터리 계층으로 자동 다운로드하는 방법이 있다.
+
+# Download *.gif from a website
+# (globbing, like "wget http://www.server.com/dir/*.gif", only works with ftp)
+wget -e robots=off -r -l1 --no-parent -A.gif ftp://www.example.com/dir/
+# Download the title page of example.com, along with
+# the images and style sheets needed to display the page, and convert the
+# URLs inside it to refer to locally available content.
+wget -p -k http://www.example.com/
+# Download the entire contents of example.com
+wget -r -l 0 http://www.example.com/
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># cURL https://www.lesstif.com/pages/viewpage.action?pageId=14745703
+# 다운로드 받은 파일을 콘솔로 출력
+curl http://www.gnu.org/software/bash/manual/html_node/index.html
+# 지정한 이름으로 저장
+curl -o index.html http://www.gnu.org/software/bash/manual/html_node/index.html
+# 서버의 filename 으로 저장
+curl -O  http://www.gnu.org/software/bash/manual/html_node/index.html
+# 여러 url 에서 동시에 다운로드
+curl -O  http://www.gnu.org/software/bash/manual/html_node/index.html -O http://www.gnu.org/savannah-checkouts/gnu/libiconv/documentation/libiconv-1.13/iconv.1.html
+</code></pre></div></div>
+
+<p>https://m.blog.naver.com/PostView.nhn?blogId=alkydes&amp;logNo=220593597738&amp;proxyReferer=https%3A%2F%2Fwww.google.com%2F</p>
+
+<h4 id="브라우저가-처리하는-과정을-wireshark-같은-네트워크-패킷-분석-도구를-통해서-확인한다">브라우저가 처리하는 과정을 WireShark 같은 네트워크 패킷 분석 도구를 통해서 확인한다.</h4>
+<ul>
+  <li>미션 중에 수행한 zum.com에 reqeust한 패킷을 확인해본다.</li>
+  <li><img src="https://i.imgur.com/wdEpyMp.png" alt="" /></li>
+</ul>
+
+<h4 id="wireshark-도구가-동작하는-원리에-대해-학습한다">WireShark 도구가 동작하는 원리에 대해 학습한다.</h4>
+<ul>
+  <li>wireshark의 패킷 캡쳐 원리는 패킷 스니핑이다.</li>
+  <li>상대방들의 패킷 교환을 엿듣는것을 의미한다. 쉽게말해 네트워크 트래픽을 도청하는 과정을 스니핑이라고 할 수 있다. 흔히 인디게임들이 사용하는 방식으로써 게임에서는 PlayerPrefs 의 정보나 Json 및 Xml 파싱정보를 서버에 POST로 날리는 방식으로 구현하는데 이때 각종 스니퍼로 해당 패킷을 캡쳐후 분석 - 가짜 수정 데이터를 서버에 다시한번 전송하는것으로 가짜기록을 서버에 덮어쓰기 하는 방식이다.</li>
+</ul>
+
+<!--
+
+# Day16 Text Browser
+
+
+## 왜 필요한가?
+URI/URL 규격과 HTTP 프로토콜 규격을 이해하면 웹 브라우저가 동작하는 방식을 이해하는 데 도움이 된다. 실제로 웹 브라우저 주소창에 주소를 입력한 순간부터 웹 서버를 찾아서 요청을 보내고 응답을 받아서 화면에 표시하기까지 흐름을 이해하는 게 중요하다.
+
+## 학습 목표
+- URI/URL 표준 규격을 학습하고, URL 문자열을 분석해서 처리하는 라이브러리를 직접 구현하는 것이 목표다.
+- 웹 브라우저 동작을 이해하기 위해서, 텍스트 기반으로 동작하는 웹 브라우저를 만드는 것이 목표다. 
+
+## 미션
+
+### 1) URL 처리 요구사항
+
+- URI/URL 규격을 처리하는 라이브러리 모듈 또는 클래스를 구현한다.
+
+	- nodejs URL 모듈과 상관없이 다음 조건을 만족하는 직접 URL 객체를 구현해야 한다.
+
+- URL 문자열을 초기 매개변수로 전달해서 URL 객체를 생성할 수 있어야 한다.
+
+	- URL에 포함될 수 없는 특수문자가 포함된 경우나 필수적인 항목이 없으면 `throw` 처리한다.
+
+	- URL 구성 문자에서 escape 문자는 무시하고 alpha 또는 digit, safe, extra 수준만 지원한다고 가정한다. [BNF 문법 참조](https://tools.ietf.org/html/rfc1738) 
+
+	- 따라서 escape 문자는 구현하지 않아도 된다.
+
+- 다음과 같은 URL 부속 요소에 접근해서 읽고, 변경할 수 있어야 한다.
+
+  - host : String
+  - lastPathComponent : String
+  - pathComponents : [String] //readonly
+  - port : Int
+  - query : String
+  - scheme : String
+  - isFileURL : Boolean
+  - user : String
+  - password : String
+  - absoluteString : String (computed property)
+  
+- Path Components 관련 기능
+
+  - `pathComponents`는 읽기만 가능하도록 만들고 변경하는 것은 메소드를 만든다
+
+  - append 경로 추가하는 메소드
+
+  - 마지막 경로 제거하기
+
+- URL 객체끼리 같은지 비교하는 함수. 결과는 다음과 같에 5개 상태중에 하나
+
+	1) scheme부터 username, password, host:port까지 같은 상태
+
+	2) scheme과 host:port만 같은 상태 (username, password 제외)
+
+	3) scheme부터 path까지만 모두 같은 상태
+
+	4) 완벽하게 같은 상태
+
+	5) 그 외 서로 다른 상태
+
+- 기본 동작을 확인하기 위한 테스트 코드를 작성해서 동작 결과를 확인한다.
+
+#### 동작 예시 (테스트 코드는 생략)
+
+```javascript
+var url = new URL("http://user_name:pass-word@boostcamp.connect-foundation.or.kr:2019/first/second/last?query=ab&param=12");
+
+//url.host = "boostcamp.connect-foundation.or.kr"
+//url.lastPathComponent = "last"
+//url.pathComponents = ["/", "first", "second", "last"]
+//url.port = 2019
+//url.query = "query=ab&param=12"
+//url.scheme = "http"
+//url.isFileURL = false
+//url.user = "user_name"
+//url.password = "pass-word"
+//url.absoluteString = "http://user_name:pass-word@boostcamp.connect-foundation.or.kr:2019/first/second/last?query=ab&param=12"
+
+url.appendPathComponent("basecamp");
+url.appendPathComponent("camp");
+//url.absoluteString = "http://user_name:pass-word@boostcamp.connect-foundation.or.kr:2019/first/second/last/basecamp/camp?query=ab&param=12"
+url.deleteLastPathComponent();
+//url.absoluteString = "http://user_name: pass-word@boostcamp.connect-foundation.or.kr:2019/first/second/last/basecamp?query=ab&param=12"
+
+var url2 = new URL("http://user_name:pass-word@boostcamp.connect-foundation.or.kr:2019/first/second/last?query=cd&param=12");
+
+
+var zumurl = new URL("http://admin@zum.com/#!/home?query=zum");
+
+var naverurl = new URL("http://m.naver.com");
+console.log(zumurl.isEqual(naverurl));
+
+var url1 = new URL("http://admin@zum.com/#!/home?query=zum");
+console.log(zumurl.isEqual(url1));
+
+var url2 = new URL("http://admin@zum.com/#!/home");
+console.log(zumurl.isEqual(url2));
+
+var url3 = new URL("http://admin@zum.com/?param=zum");
+console.log(zumurl.isEqual(url3));
+
+var url4 = new URL("http://zum.com/#!/home");
+console.log(zumurl.isEqual(url4));
+```
+
+
+### 2) HTTP Request 요구사항
+
+- 웹 브라우저가 동작하는 것을 단순화해서 그대로 구현한다.
+
+- 프로그램을 실행할 때 또는 실행하고 나서 URL을 입력한다. 
+	
+	- `http://zum.com` 주소를 넣어서 꼭 동작해야 한다.
+
+- 입력한 URL 구성 요소를 분석하고, host 정보를 DNS Server에서 검색한다. 
+
+	- Node API 중에서 DNS 모듈을 활용한다.
+
+- host 정보로 찾은 IP 주소 중에 첫번째 값과 port 정보로 TCP Socket을 연결한다. 
+
+	- Node API 중에 Net 모듈을 활용한다.
+
+- HTTP Request 규격을 처리하는 라이브러리 모듈 또는 클래스를 구현한다.
+
+	- 매개변수로 URL을 넘겨서 Request 객체를 생성한다.
+
+	- 요청 방식을 변경하기 위해서 method를 바꿀 수 있다. 기본값은 `GET` 메소드로 생성한다.
+
+	- 요청에 필요한 Header를 추가할 수 있다. 
+
+	- 전송하기 위해 Request Message를 문자열로 return하는 stringfy() 메소드를 구현한다.
+
+- URL 정보를 바탕으로 HTTP Request 객체를 생성하고, Request 메시지를 TCP 세션에 전송(send)한다. 소켓을 생성해서 요청을 보내고 응답을 받아서 처리하는 동작을 구현한다.
+
+	- 서버가 HTTP Reqeust를 인식하기 위한 필수 헤더로 구성한다. (어떤 헤더가 필요한가 학습해서 추가한다.)
+
+- 동작 예시1처럼 네이버로 요청하는 경우 어떤 응답이 오는지 확인한다.
+
+- 동작 예시2에 있는 주소로 GET 요청을 전송한다.
+
+	- 정상적으로 전송되었는지 WireShark 같은 네트워크 분석 도구에서 확인한다. 
+
+	- 결과를 화면 캡처해서 첨부한다.
+
+#### 동작 예시1
+
+> URL `http://m.naver.com`
+> 
+> (DNS Lookup...)
+> 
+> TCP Connection : 125.209.218.87 80
+>
+> `HTTP Request`
+
+
+#### 동작 예시2
+
+> URL `http://zum.com`
+> 
+> (DNS Lookup...)
+> 
+> TCP Connection : 121.189.40.10 80
+>
+> `HTTP Request`
+
+
+### 3) HTTP Response 요구사항
+
+- 웹 브라우저가 기본 동작을 구현하기 위해서 응답 처리를 구현한다.
+
+- Request 전송 이후에 수신되는 HTTP Response을 받아서 아래 과정을 거쳐서 출력한다.
+
+- 만약 body에 오는 data가 커서 분리되는 경우는 나머지를 합쳐서 전체를 저장해야 한다. 
+
+	- 정확하게 Content-Length 헤더에 있는 값과 특수문자를 포함한 Body 크기가 같아야 한다.
+
+- 전체 응답을 다 받고나면 응답 데이터를 분석한다.
+
+	- HTTPRequest 처럼 HTTPResponse 객체를 구현한다.
+
+	- HTTP Response Header 부분과 Body를 구분한다. 
+
+	- HTTP Reponse Status 코드를 분리한다. 
+
+	- HTTP Header 중에서 Content-Length 값을 분리한다.
+
+- HTTPResponse 객체는 다음과 같은 속성을 가진다.
+
+	- statusCode : Int
+
+	- responseLine : String
+
+	- contentLength : Int
+
+	- headers : [String]
+
+	- body : Buffer
+
+- Reponse Header를 문자열로 출력하고, Body를 문자열로 바꿔서 출력한다. 
+
+- 모든 데이터를 받고 3초 후에 socket을 소멸하고 프로그램을 종료한다.
+
+#### 동작 예시
+
+> URL `http://zum.com`
+>
+> TCP Connection : 121.189.40.10 80
+
+`HTTP Request`
+
+```
+GET / HTTP/1.1
+Accept: text/html
+Host: zum.com
+User-Agent: Mozilla/5.0
+```
+
+`HTTP Response header`
+
+```
+HTTP/1.1 200
+Server: nginx/1.8.0
+Date: Fri, 29 Mar 2019 10:17:38 GMT
+Content-Type: text/html;charset=UTF-8
+Content-Length: 99605
+Connection: keep-alive
+Keep-Alive: timeout=5
+Vary: Accept-Encoding
+X-Application-Context: application:set1:8081
+Cache-Control: no-store
+Set-Cookie: _TUID=2053B3E7-129F-40E0-A1D0-A6BF7A541B57; Expires=Mon, 26-Mar-2029 10:17:38 GMT; Path=/
+Set-Cookie: _ZUT=nc%3D72843112530; Domain=.zum.com; Path=/
+Set-Cookie: czi=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
+Set-Cookie: bakeryStamp=1; Expires=Mon, 26-Mar-2029 10:17:38 GMT; Path=/
+Set-Cookie: p=0; Path=/
+```
+
+`HTTP Response Body - HTML`
+
+```
+<!DOCTYPE html>
+<html lang="ko" class="">
+<head>
+<title>ZUM - 생각을 읽다, ZUM</title>
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="cache-control" content="no-cache"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta property="og:title" content="검색포털 줌닷컴"/>
+<meta property="og:description" content="생각을 읽는 검색포털 줌닷컴에서 빠르고 편리한 서비스를 만나보세요!"/>
+<meta property="og:image" content="http://lego.zumst.com/resources/current/images/img_zum.jpg"/>
+<link rel="image_src" href="http://lego.zumst.com/resources/current/images/thumb_zum.jpg"/>
+<link rel="icon" href="/favicon.ico?v=2"/>
+<style>
+html {
+background: url(http://lego.zumst.com/resources/current/images/img_main_loading.gif) no-repeat 50% 310px
+}
+body {
+display: none
+}
+</style>
+... <중간생략>
+
+</head>
+<body>
+
+...<중간생략>
+
+<li>
+<div class="item" data-olap-url="//olaplog.smartmediarep.com/api/v1/olap/olap.sb?version=1.0&media=SMR_MEMBERS&site=ZUM&recomedia=SMR&page=CP_HOME&layout=L1&cpid=C0&channelid=&section=&brand=&programid=&clipid=&targetclipid=CS1_192310&requesttime=20190329191600&device=PC">
+<a class="clip_content" href="//tv.zum.com/play/1059872" data-cm="img" data-order="5">
+<div class="thumb">
+<img src="//thumb.tv.zumst.com/s/zum.tv-zum-cf/tvchosun/2019/03/29/4d63ff958c335f38c8cfe8bb14b70af5.jpg?w=352&h=200">
+</div>
+<span class="bd"></span>
+<span class="icon_mov"></span>
+</a>
+<a class="clip_content" href="//tv.zum.com/play/1059872" data-cm="tit" data-order="5">
+<strong class="title">입 벌어지는 ‘커피 한 잔‘ 장하온 ◉_◉ 박력 웨이브까지?</strong>
+</a>
+<span class="source">
+<a class="clip_content channel" href="//tv.zum.com/channel/3489" data-cm="reference" data-order="5">
+미스트롯
+</a>
+</span>
+</div>
+</li>
+</ul>
+</div>
+<a href="//tv.zum.com" class="view_more">
+<span>TV줌</span> 홈<b class="icon_arrow"></b>
+</a>
+</div>
+</div>
+<style type="text/css">body {-ms-touch-action: pan-y pinch-zoom;}</style>
+</body>
+</html>
+
+```
+
+## 배경 지식
+
+### URI/URL 규격
+
+- URI 주소를 구성하는 요소들에 대해 어떤 용어로 구분하고 처리하는지 학습한다.
+
+- `RFC1738` 표준안에 명시되어 있는 문법 구성을 학습한다.
+
+### HTTP 프로토콜
+
+- HTTP 1.1 프로토콜 규격에서 Request와 Response 종류에 대해 학습한다.
+
+- HTTP과 함께 사용하는 관련 프로토콜 규격을 찾아보고 어떤 역할을 담당하는지 학습한다.
+
+- 웹 브라우저가 동작하는 방식에 대해 학습한다.
+
+	- URL을 입력하면 URL 구성 요소를 분석하고, host 정보를 DNS Server에서 검색한다.
+
+	- host 정보에서 찾은 서버로 보내는 HTTP Reqeuset 내용을 브라우저 개발자 환경에서 확인한다.
+
+	- 여러 사이트에서 받는 HTTP Response 내용을 확인하고, 필수적인 정보가 무엇인가 확인한다.
+
+	- 웹 브라우저는 응답으로 받은 HTML을 표시하기 위해서 어떤 동작을 하는지 확인한다.
+
+### SOCKET API
+
+- TCP/IP 수준에서 저수준 네트워크 프로그래밍을 위한 SOCKET API에 대해 학습한다.
+
+- SOCKET API에 대한 Client, Server 동작 원리를 학습한다.
+
+## 학습정리
+
+### 피어 컴파일링 체크포인트
+
+```
+  1. [ ] URL 문자열로 URL 분석 후 객체 생성 - 예외처리 확인
+  2. [ ] URL 부속 요소 접근 - 5개 이상 구현 확인
+  3. [ ] Path 콤포넌트 - 경로 변경 확인
+  4. [ ] URL 객체 비교 - 모든 상태 조건 확인
+  5. [ ] 텍스트 브라우저에 URL 주소 입력 - zum.com 동작 확인
+  6. [ ] DNS 검색 - Host 주소 확인
+  7. [ ] HTTP Request 객체 생성 + 필수 헤더 포함
+  8. [ ] HTTP Request 메시지 전송 - Socket Client 동작 확인
+  9. [ ] HTTP Response 수신 + 데이터 병합 - Content-Length와 크기 비교
+  10. [ ] HTTP Response 분석 객체 - Response Header 확인
+  11. [ ] HTTP Response Body 출력 - HTML
+```
+
+### 스스로 확인할 사항
+
+- URL 구성 요소에 대해 학습한다. 
+- 다양한 URL 케이스를 어떻게 처리하는지 확인한 방법을 정리한다.
+- HTTP Request 종류와 HTTP Response 종류에 대해 학습하고 정리한다.
+
+### 다같이 확인할 사항
+
+- 웹 브라우저가 동작하는 과정을 개발자 화면에서 확인하고 학습한다.
+- 리눅스/유닉스 환경에서 wget 이나 curl 명령 사용방식에 대해 학습한다.
+- 브라우저가 처리하는 과정을 WireShark 같은 네트워크 패킷 분석 도구를 통해서 확인한다.
+- WireShark 도구가 동작하는 원리에 대해 학습한다.
+-->
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left"
+            href="/boost-camp/2019/08/07/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%94%84-Day15.html" data-toggle="tooltip"
+            data-placement="top" title="부스트 캠프 Day15">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/boost-course/2019/08/12/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BD%94%EC%8A%A4(%EC%9B%B9)-proj3-2.html"
+            data-toggle="tooltip" data-placement="top" title="부스트 코스(웹) PROJ3-2">Next<span
+              class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+        
+        <div id="disqus_thread"></div>
+          <script>
+
+          /**
+          *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+          *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+          /*
+          var disqus_config = function () {
+          this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+          this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+          };
+          */
+          (function() { // DON'T EDIT BELOW THIS LINE
+          var d = document, s = d.createElement('script');
+          s.src = 'https://https-changgunyee-github-io.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+          })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+        
+        </div>
+      </div>
+    </div>
+      
+  <script id="dsq-count-scr" src="//https-changgunyee-github-io.disqus.com/count.js" async></script>
+  <style>
+    img{
+      display:block;
+      margin:0px auto;
+      width:80%;
+    }
+    #disqus_thread{
+      margin-top:2rem;
+    }
+  </style>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="mailto:minyoung403@naver.com">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="far fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/changgunyee">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://instagram.com/char_quen">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          <li class="list-inline-item">
+              <a href="https://www.buymeacoffee.com/changgunyee" target="_blank">
+                <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee"style="height: auto !important;width: auto !important;display:inline-block;">
+              </a>
+          </li>
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; 이창권 2019</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145057839-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-145057839-1');
+</script>
+
+</body>
+
+</html>
