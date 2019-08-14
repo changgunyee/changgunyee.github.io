@@ -1,9 +1,23 @@
-@media screen and (max-width:500px ){
+@media screen and (max-width:415px ){
   html{
     font-size:14px;
   }
   .masthead{
       margin-bottom:0px !important;
+  }
+  .nav-link{
+    padding:0rem;
+  }
+  .category-title{
+    font-size:1.4rem !important;
+  }
+  .category-title-container{
+    padding:0rem;
+  }
+}
+@media screen and (max-width:376px){
+  .category-title{
+    font-size:1.2rem !important;
   }
 }
 
