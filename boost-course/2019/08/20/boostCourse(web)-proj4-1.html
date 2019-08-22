@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    부스트 코스(웹) PROJ4-1 - changgunyee
+    
+  </title>
+
+  <meta name="description"
+    content="부스트 코스 proj4-1를 진행하였습니다. 개발해야하는 파트는 네이버 예약 서비스의 상세 페이지의 백엔드 파트였습니다. 개발해야하는 기능은 상품에 대한 상세 페이지인 main view와 상품에 대한 한줄평을 볼 수 있는 comment view와 상품에 대한 displayInfo를...">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-7578104907913978",
+            enable_page_level_ads: true
+        });
+  </script>
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+    type='text/css'>
+  <link
+    href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+    rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/fontawesome-free/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/custom.css">
+  <link rel="canonical" href="https://changgunyee.github.io/boost-course/2019/08/20/boostCourse(web)-proj4-1.html">
+  <link rel="alternate" type="application/rss+xml" title="changgunyee"
+    href="/feed.xml">
+  <style>
+    body {
+      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">changgunyee</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/develop">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+<header class="masthead"
+  style="background-image: url('/img/boost-course.jpg')">
+  
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>부스트 코스(웹) PROJ4-1</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">이창권</a>
+              on August 20, 2019
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 mx-auto">
+
+        <p>부스트 코스 proj4-1를 진행하였습니다.</p>
+
+<p>개발해야하는 파트는 네이버 예약 서비스의 상세 페이지의 백엔드 파트였습니다.<br />
+개발해야하는 기능은 상품에 대한 상세 페이지인 main view와 상품에 대한 한줄평을 볼 수 있는 comment view와 상품에 대한 displayInfo를 구할 수 있는 api를 만드는 것으로 총 3가지 였습니다.</p>
+
+<h3 id="displayinfo-apiapiproductsdisplayinfoid">displayInfo api(<code class="highlighter-rouge">/api/products/{displayInfoId}</code>)</h3>
+
+<p>displayInfo api에는 많은 정보가 들어 있습니다.<br />
+spring MVC에 따라 개발해야 보겠습니다. dto -&gt; dao -&gt; service -&gt; controller<br />
+model(dto)을 구성해야 하므로 이에 따라 만든 model 목록입니다.</p>
+<ul>
+  <li>Comment</li>
+  <li>CommentImage</li>
+  <li>DisplayInfo</li>
+  <li>DisplayInfoImage</li>
+  <li>ProductImage</li>
+  <li>ProductPrice</li>
+</ul>
+
+<p>사용한 테이블들 입니다.</p>
+
+<p><img src="/img/2019-08-20/erd.png" style="width:50%;" /></p>
+
+<p>꽤 많았습니다.(<del>사실 너무 많았….</del>)</p>
+
+<p>데이터 베이스의 테이블을 이용해 위의 모델 객체를 만들 수 있게 도와주는 dao가 있어야 됩니다.<br />
+각 모델이 가지고 있는 속성에 따라 필요한 테이블을 join해서 모델 객체를 만들어 주어야 합니다.</p>
+<ul>
+  <li>DisplayInfo : public DisplayInfo selectDisplayInfo(Integer displayInfoId)</li>
+  <li>DisplayInfoImage : public DisplayInfoImage selectDisplayInfoImage(Integer displayInfoId)</li>
+  <li>Comments : public List<Comment> selectComments(Integer displayInfoId)</Comment></li>
+  <li>CommentImages : public List<CommentImage> selectCommentImages(Integer reservationUserCommentId)</CommentImage></li>
+  <li>ProductImages : public List<ProductImage> selectProductImages(Integer productId)</ProductImage></li>
+  <li>ProductPrices : public List<ProductPrice> selectProductPrices(Integer productId)</ProductPrice></li>
+</ul>
+
+<p>위의 함수들로 객체를 생성합니다. 현재 조회하는 기능만 있으면 되므로 수정, 삭제 기능을 담당하는 함수는 만들지 않았습니다.</p>
+
+<p>자 이제 service차례입니다.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@Override</span>
+    <span class="nd">@Transactional</span>
+    <span class="kd">public</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Object</span><span class="o">&gt;</span> <span class="nf">getDetailDisplayInfo</span><span class="o">(</span><span class="nc">Integer</span> <span class="n">displayInfoId</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">displayInfo</span><span class="err">가져오기</span><span class="c1">//selectDisplayInfo</span>
+        <span class="n">displayInfoImage</span><span class="err">가져오기</span><span class="c1">//selectDisplayInfoImage</span>
+        <span class="n">productImages</span><span class="err">가져오기</span><span class="c1">//selectProductImages</span>
+        <span class="n">productPrices</span><span class="err">가져오기</span><span class="c1">//selectProductPrices</span>
+        <span class="n">comments</span><span class="err">가져오기</span><span class="c1">//selectComments</span>
+        <span class="err">각</span> <span class="n">comment</span><span class="err">의</span> <span class="n">id</span><span class="err">에</span> <span class="err">맞는</span> <span class="n">commentImage</span><span class="err">가져오기</span><span class="c1">//selectCommentImages</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<p>@Transactional annotation을 사용하면 함수가 실행되거나, 중간에 문제가 생기면 아예 함수를 실행하기 전으로 rollback하게끔 도와줍니다.</p>
+
+<p>이번 과제 명세 중 하나가 사용자 email을 <code class="highlighter-rouge">dkwo****</code>와 같은 형식으로 표현하는 것이였는데, 저는 프론트에서 해결하였었습니다. 하지만 리뷰어님께서 보통 많은 페이지들에서 이메일을 저런 식으로 표현해야하기 때문에 프론트마다 코드를 만들기 보다도 백엔드에서 처리해주어 처리 포인트를 1개롤 모으는 것이 보통이라고 하셨습니다. 따라서 comment마다 commentImages를 가져올 때, comment의 이메일 형식도 바꿔주는 것으로 바꾸고 프론트는 단순 출력만 하게 수정하였습니다.(또 하나 배웠습니다. 크흡…..)</p>
+
+<p>서버를 실행하고, postman에서 api url에 요청해본 결과입니다.</p>
+
+<p><img src="/img/2019-08-20/api.png" /></p>
+
+<h3 id="상세-페이지main-view">상세 페이지(main view)</h3>
+
+<p>위의 displayInfo api에서 controller를 제외한 mvc모델을 다 만들어 놨기 때문에, 상세 페이지와 한줄평 페이지 view는 굉장히 간단해 졌습니다.<br />
+service의 getDetailDisplayInfo함수를 이용해 필요한 정보를 받아와 modelMap객체를 통해 detail.jsp에 넘겨 줍니다.<br />
+대략적인 코드는 다음과 같습니다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">path</span> <span class="o">=</span> <span class="s">"/detail"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">DetailController</span> <span class="o">{</span>
+    <span class="nd">@GetMapping</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">renderDetailPage</span><span class="o">(</span><span class="nd">@RequestParam</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"id"</span><span class="o">)</span> <span class="kt">int</span> <span class="n">displayInfoId</span><span class="o">,</span> <span class="nc">ModelMap</span> <span class="n">modelMap</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">getDetailDisplayInfo</span><span class="err">호출</span>
+        <span class="n">modelMap</span><span class="err">에</span> <span class="n">displayInfo</span><span class="err">주입</span>
+        <span class="k">return</span> <span class="s">"detail"</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="한줄평-페이지comment-view">한줄평 페이지(comment view)</h3>
+
+<p>상세 페이지와 비슷합니다. getDetailDisplayInfo를 이용하면 불필요한 정보까지 받아오므로 비효율적입니다. 따라서 추가적으로 <code class="highlighter-rouge">getDetailComments()</code>함수를 만들어 주었습니다.<br />
+이 데이터 또한 modelMap객체를 통해 comment.jsp에 넘겨줍니다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">path</span> <span class="o">=</span> <span class="s">"/comment"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CommentController</span> <span class="o">{</span>
+    <span class="nd">@GetMapping</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">renderCommentPage</span><span class="o">(</span><span class="nd">@RequestParam</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"id"</span><span class="o">)</span> <span class="kt">int</span> <span class="n">displayInfoId</span><span class="o">,</span> <span class="nc">ModelMap</span> <span class="n">modelMap</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">getDetailComments</span><span class="err">호출</span>
+        <span class="n">modelMap</span><span class="err">에</span> <span class="n">comments</span><span class="err">주입</span>
+        <span class="k">return</span> <span class="s">"comment"</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="새롭게-배운-점">새롭게 배운 점</h3>
+
+<p>spring MVC에서 view를 넣으려면 jsp파일을 만들고, controller도 만들어야 되죠.<br />
+원하는 url에 view하나 넣을 때마다 controller를 만들어 넣어야하는 건 굉장히 부담스러운 일입니다.<br />
+원하는 url에 정적인 페이지를 넣고 싶을 때는 WebMvcConfigurerAdapter클래스의 addViewControllers를 override해서 간단하게 view를 등록할 수 있습니다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Configuration</span>
+<span class="nd">@EnableWebMvc</span>
+<span class="nd">@ComponentScan</span><span class="o">(</span><span class="n">basePackages</span> <span class="o">=</span> <span class="o">{</span><span class="s">"kr.or.connect.mavenweb.controller"</span><span class="o">})</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebMvcContextConfiguration</span> <span class="kd">extends</span> <span class="nc">WebMvcConfigurerAdapter</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configureDefaultServletHandling</span><span class="o">(</span><span class="nc">DefaultServletHandlerConfigurer</span> <span class="n">configurer</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">configurer</span><span class="o">.</span><span class="na">enable</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addViewControllers</span><span class="o">(</span><span class="kd">final</span> <span class="nc">ViewControllerRegistry</span> <span class="n">registry</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"addViewControllers가 호출됩니다. "</span><span class="o">);</span>
+        <span class="n">registry</span><span class="o">.</span><span class="na">addViewController</span><span class="o">(</span><span class="s">"/"</span><span class="o">).</span><span class="na">setViewName</span><span class="o">(</span><span class="s">"index"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>사실 이 configure부분이 서버에 대한 이해도가 낮으면 굉장히 코드 한줄 한줄을 이해하기가 힘듭니다.<br />
+조금이라도 분석을 해봅시다.</p>
+
+<ol>
+  <li><code class="highlighter-rouge">configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer)</code>
+    <ul>
+      <li>기본적으로 설정은 DispatcherServlet이 읽어 들입니다.</li>
+      <li>url요청이 들어왔을 때, DefaultServletHttpRequestHandler가 원래 처리합니다.</li>
+      <li>위와 같이 <code class="highlighter-rouge">configurer.enable()</code>로 configurer를 허용해주면, mapping이 없는 URL요청이 들어왔을 때 DefaultServletHttpRequestHandler가 요청을 DefaultServletHandler에 넘기게 되고 DefaultServletHandler는 WAS의 static한 자원을 읽어서 보여줍니다.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">addViewControllers(final ViewControllerRegistry registry)</code>
+    <ul>
+      <li>ViewControllerRegistry객체를 이용해 특정 URL에 대한 처리를 controller없이 할 수 있습니다.</li>
+      <li>위와 같이 registry에 <code class="highlighter-rouge">addViewController()</code> 함수를 이용하면 <code class="highlighter-rouge">/</code> URL에 index라는 view를 보여줄 수 있게됩니다.</li>
+    </ul>
+  </li>
+</ol>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left"
+            href="/boost-course/2019/08/12/boostCourse(web)-proj3-2.html" data-toggle="tooltip"
+            data-placement="top" title="부스트 코스(웹) PROJ3-2">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+
+        </div>
+        
+        <div id="disqus_thread"></div>
+          <script>
+
+          /**
+          *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+          *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+          /*
+          var disqus_config = function () {
+          this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+          this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+          };
+          */
+          (function() { // DON'T EDIT BELOW THIS LINE
+          var d = document, s = d.createElement('script');
+          s.src = 'https://https-changgunyee-github-io.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+          })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+        
+        </div>
+      </div>
+    </div>
+      
+  <script id="dsq-count-scr" src="//https-changgunyee-github-io.disqus.com/count.js" async></script>
+  <style>
+    img{
+      display:block;
+      margin:0px auto;
+      width:80%;
+    }
+    #disqus_thread{
+      margin-top:2rem;
+    }
+  </style>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="mailto:minyoung403@naver.com">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="far fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/changgunyee">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://instagram.com/char_quen">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          <li class="list-inline-item">
+              <a href="https://www.buymeacoffee.com/changgunyee" target="_blank">
+                <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee"style="height: auto !important;width: auto !important;display:inline-block;">
+              </a>
+          </li>
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; 이창권 2019</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145057839-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-145057839-1');
+</script>
+
+</body>
+
+</html>

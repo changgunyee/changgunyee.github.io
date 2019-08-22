@@ -8,12 +8,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <title>
-    react native로 iOS 앱 개발하고 등록하기 - changgunyee
+    부스트 코스(웹) PROJ3-1 - changgunyee
     
   </title>
 
   <meta name="description"
-    content="react-native로 앱을 만들고 등록하는 과정중의 에러나 힘들었던 사항들을 정리하였습니다. Xcode로 iOS개발 시 빌드 방법(Error처리 포함) Build전 수행해야할 사항 npm install --save : node_modules directory생성 (후에 pod에...">
+    content="이번에 부스트 코스(웹) 과정을 시작하게 되었습니다. 그럼 부스트 코스가 무엇인지 부터 알려드려야겠죠? 부스트코스(웹)이란? 부스트코스에서는 단순히 이론이나 지식만을 배우는 것이 아니라 프로젝트를 통해 다양한 웹 애플리케이션을 직접 만들어보게 됩니다. 단계별 프로젝트를 통해 웹 개...">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   <script>
         (adsbygoogle = window.adsbygoogle || []).push({
@@ -34,7 +34,7 @@
 
   <link rel="stylesheet" href="/assets/main.css">
   <link rel="stylesheet" href="/assets/custom.css">
-  <link rel="canonical" href="https://changgunyee.github.io/develop/2019/07/20/iOS-%EC%95%B1-%EB%93%B1%EB%A1%9D%ED%95%98%EA%B8%B0.html">
+  <link rel="canonical" href="https://changgunyee.github.io/boost-course/2019/07/10/boostCourse(web)-proj3-1.html">
   <link rel="alternate" type="application/rss+xml" title="changgunyee"
     href="/feed.xml">
   <style>
@@ -77,18 +77,18 @@
   <!-- Page Header -->
 
 <header class="masthead"
-  style="background-image: url('/img/develop.jpg')">
+  style="background-image: url('/img/boost-course.jpg')">
   
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1>react native로 iOS 앱 개발하고 등록하기</h1>
+            <h1>부스트 코스(웹) PROJ3-1</h1>
             
             <span class="meta">Posted by
               <a href="#">이창권</a>
-              on July 20, 2019
+              on July 10, 2019
             </span>
           </div>
         </div>
@@ -100,69 +100,67 @@
     <div class="row">
       <div class="col-lg-10 col-md-10 mx-auto">
 
-        <p>react-native로 앱을 만들고 등록하는 과정중의 에러나 힘들었던 사항들을 정리하였습니다.</p>
+        <p>이번에 부스트 코스(웹) 과정을 시작하게 되었습니다.</p>
 
-<h1 id="xcode로-ios개발-시-빌드-방법error처리-포함">Xcode로 iOS개발 시 빌드 방법(Error처리 포함)</h1>
+<p>그럼 부스트 코스가 무엇인지 부터 알려드려야겠죠?</p>
 
-<h2 id="build전-수행해야할-사항">Build전 수행해야할 사항</h2>
+<p><strong>부스트코스(웹)이란?</strong></p>
 
-<ul>
-  <li><code class="highlighter-rouge">npm install --save</code> : node_modules directory생성
-  (후에 pod에서 node_modules안의 파일을 건드리기 때문에 sudo는 쓰지말도록 합니다.)</li>
-  <li><code class="highlighter-rouge">react-native link</code> : node.js패키지를 react-native에서 쓰기 위해 native code상의 필요한 부분에 코드를 주입시켜줍니다. link 명령어를 지원하지 않거나 manual한 link방법을 추천하는 패키지도 존재하므로 패키지 별로 문서를 한번 씩 읽어보는 것도 좋습니다.(현재 사용하는 패키지에서는 다 link사용 가능)</li>
-  <li><code class="highlighter-rouge">cd ios</code>&amp;<code class="highlighter-rouge">pod install</code> : node.js package를 바로 ios에서 쓰기 위해서는 패키지 관리자를 사용하여야 하는데 이것이 pod입니다. package.json=Podfile, package-lock.jso=Podfile.lock, node_modules=Pods입니다.
-(Pod와 관련해서 에러가 난다면 Podfile.lock, Pods를 삭제 후, <code class="highlighter-rouge">pod install</code>을 합니다.)</li>
-  <li>이제 Xcode에서 .xcworkspace파일을 엽니다(Pod를 쓰기 때문에 .xcodeproj대신 .xcworkspace를 엽니다)</li>
-</ul>
+<p>부스트코스에서는 단순히 이론이나 지식만을 배우는 것이 아니라 프로젝트를 통해 다양한 웹 애플리케이션을 직접 만들어보게 됩니다. 단계별 프로젝트를 통해 웹 개발 실무를 경험해보세요. 전문가의 코드리뷰와 반복적인 코드 작성으로 실무형 웹서비스를 직접 만드는 수준까지 발전할 수 있습니다!</p>
 
-<h2 id="build-시-발생하는-주요-에러">Build 시 발생하는 주요 에러</h2>
+<p>이 과정을 통해</p>
 
-<ul>
-  <li>third-party와 관련되어 에러가 날 수 있습니다.(파일이 없습니다. 어쩌구 저쩌구….)
-    <ul>
-      <li>third-party에서 패키지를 제대로 설치하지 못하는 모양입니다. 수동으로 해줍시다.</li>
-      <li><code class="highlighter-rouge">cd node_modules/react-native/third-party/glog-0.3.4</code></li>
-      <li><code class="highlighter-rouge">./configure</code></li>
-      <li><code class="highlighter-rouge">make</code>&amp;<code class="highlighter-rouge">make install</code></li>
-    </ul>
-  </li>
-</ul>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- 현업에서 활용되는 HTML/CSS, JavaScript, JAVA, Spring, Spring MVC, Spring JDBC, SQL에 대해 이해할 수 있습니다.
+- 실제 운영되고 있는 서비스인 &lt;네이버 예약&gt;을 처음부터 끝까지 직접 만들어보는 경험을 하게 됩니다.
+- 프론트엔드, 백엔드를 막론하고 실무에 필요한 기초적인 웹 애플리케이션을 혼자 만들어 볼 수 있는 수준으로 성장합니다.
+</code></pre></div></div>
 
-<p>소스파일로 된 패키지를 설치하실 때 기본적으로 내리는 3가지 명령어가 있는데 그것이 바로
-configure, make, make install 입니다.</p>
+<p>이 코스를 통해서는 전문가에게 프로젝트 리뷰를 받아볼수도 있습니다!</p>
 
-<p>여기서 소스파일이란 것은 설치파일에 대한 소스 파일입니다.
-그러므로 컴파일을 하고나면 설치파일이 생기는 것이죠. 그리고 위의 세가지 명령에 대해 알아보도록 하죠.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- 유료 결제하여 프로젝트를 제출할 수 있습니다.
+- 현업 선배 개발자가 프로젝트를 검토한 후 명확하고 친절한 코드리뷰를 제공합니다.
+- 코드리뷰와 피드백을 참고하여 모든 프로젝트를 성공적으로 통과해보세요!
+</code></pre></div></div>
 
-<p>configure 는 환경설정을 해주는 명령어입니다. 
-컴파일을 할 때 어떤 옵션을 넣거나 할 때 configure 뒤에 옵션을 넣어줍니다. 
-여기에 어떤 옵션이 정확히 들어간다고 말씀드릴 수 있는 것은 아니고 소스를 제작한 자가 readme 파일 등에
-명시되어 있습니다.</p>
+<h3 id="웹-프로젝트-3-시작">웹 프로젝트 3 시작!</h3>
 
-<p>make 는 소스를 컴파일 하는 것입니다. 컴파일이란 것은 소스파일을 사용자가 실행 가능한 파일로 만들어 주는
-과정을 말합니다. make 과정이 끝나고 나면 설치파일이 생성된 상태라고 볼 수 있습니다.</p>
+<p>프로젝트3부터 프로젝트 6까지는 기존에 네이버에 존재하는 예약 관리 시스템을 만들어 보는 것입니다.
+프로젝트3 수업에서 학습하는 내용은 간단히 다음과 같습니다.</p>
 
-<p>make install 은 설치를 하는 과정입니다. 앞 과정에서 생성된 설치파일을 실행해서 설치를 끝내는 과정입니다.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- Web Animation
+- Web UI &gt; DOMContentLoaded이벤트, Event delegation, HTML templating
+- Tab UI 실습
+- Spring Core &gt; Spring에 대한 기초 학습, Java Config&amp;Xml을 이용한 설정
+- Spring JDBC의 이해와 실습
+- Spring MVC에 대한 이해와 실습
+- 레이어드 아키텍처 실습
+- Rest Controller의 기초와 실습
+</code></pre></div></div>
 
-<ul>
-  <li><strong>No member named ‘__rip’ in ‘__darwin_arm_thread_state64’</strong> 에러
-    <ul>
-      <li>
-        <p><code class="highlighter-rouge">ucontext_t *context = reinterpret_cast&lt;ucontext_t *&gt;(ucontext_in_void);</code></p>
+<p>프로젝트 3-1은 백엔드와 관련된 내용으로 다음과 같은 기술을 구현해야 합니다.</p>
 
-        <p><code class="highlighter-rouge">return (void*)context-&gt;PC_FROM_UCONTEXT; // &lt;---- build error here</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- 웹백엔드 기술요구사항
 
-        <p>를 <code class="highlighter-rouge">return NULL;</code>로 code를 직접 수정해줍니다.</p>
-      </li>
-    </ul>
-  </li>
-</ul>
+    - 제공된 SQL을 이용해서 테이블을 생성하고, 샘플데이터를 입력합니다.
+    - maven을 이용해서 웹 어플리케이션 프로젝트를 작성합니다.
+    - 학습했던 것처럼 controller,service,dao로 레이어드 아키텍쳐를 구성합니다.
+    - spring JDBC를 이용하여 주어진 테이블로부터 입력, 수정, 삭제, 조회하는 DAO와 DTO를 
+      작성합니다.
+    - 서비스 인터페이스를 작성하고 해당 서비스 인터페이스에 비지니스 메소드를 작성합니다.
+    - 서비스 인터페이스를 구현하는 클래스를 작성합니다.
+    - 해당 구현 클래스의 메소드에 적절한 트랜잭션에 관련된 애노테이션을 사용합니다.
+    - 클라이언트에게 Web API를 제공하기 위해 RestController 를 작성합니다.
+</code></pre></div></div>
 
-<h2 id="앱-등록시-reject-사유">앱 등록시 reject 사유</h2>
-<ul>
-  <li>구글 로그인 시 보안을 다 풀어두어도 새로운 핸드폰에서 로그인시 인증을 한번 거쳐야 한다. 하지만 Reviewer들은 해주지 않는다. 우리가 제공하는 계정은 가장 높은 권한을 가진 바로 로그인할 수 있어야 한다.</li>
-  <li>구글 콘솔 상에서 OAuth인증 파트에서 사용하는 API가 느낌표가 떠있으면 로그인 시에 <strong>this app is not verified</strong> 라는 것이 뜨는데, 보통의 경우에는 advanced를 눌러 진행할 수 있지만 Reviewer는 이것을 reject사유로 잡는다.</li>
-</ul>
+<p>프로젝트 통과한 모습입니다.</p>
+
+<p><img src="/img/2019-07-10/부스트코스3-1_pass모습.jpg" /></p>
+
+<p>부스트 코스 에이스 또한 신청하였습니다!!!!</p>
+
+<p>앞으로 진행하면서, 프로젝트 3-2 부터는 학습한 내용을 따로 포스팅하고 프로젝트 진행시 에러나 어려웠던 점 또한 기록하려고 합니다.</p>
+
+<p>감사합니다~~</p>
 
 
         <hr>
@@ -171,13 +169,13 @@ configure, make, make install 입니다.</p>
 
           
           <a class="btn btn-primary float-left"
-            href="/boost-camp/2019/07/18/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%94%84-Day4.html" data-toggle="tooltip"
-            data-placement="top" title="부스트 캠프 Day4">&larr; Previous<span class="d-none d-md-inline">
+            href="/develop/2019/05/01/connect4_ai.html" data-toggle="tooltip"
+            data-placement="top" title="connect4게임의 AI를 만들어보자">&larr; Previous<span class="d-none d-md-inline">
               Post</span></a>
           
           
-          <a class="btn btn-primary float-right" href="/boost-camp/2019/07/22/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%94%84-Day5.html"
-            data-toggle="tooltip" data-placement="top" title="부스트 캠프 Day5">Next<span
+          <a class="btn btn-primary float-right" href="/boost-camp/2019/07/15/boostCamp-Day1.html"
+            data-toggle="tooltip" data-placement="top" title="부스트 캠프 Day1">Next<span
               class="d-none d-md-inline">
               Post</span> &rarr;</a>
           
