@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    부스트 코스(웹) PROJ4-2 - changgunyee
+    
+  </title>
+
+  <meta name="description"
+    content="부스트 코스 proj4-2를 진행하였습니다. 이번에는 네이버 예약 서비스 상세페이지의 프론트엔드를 개발하였습니다. 개발해야하는 파트는 총 3부분으로 display item의 정보를 보여주는 메인 상세페이지와 해당 display item의 모든 한줄평을 볼 수 있는 한줄평 상세페이지...">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-7578104907913978",
+            enable_page_level_ads: true
+        });
+  </script>
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+    type='text/css'>
+  <link
+    href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+    rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/fontawesome-free/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/custom.css">
+  <link rel="canonical" href="https://changgunyee.github.io/boost-course/2019/08/27/boostCourse(web)-proj4-2.html">
+  <link rel="alternate" type="application/rss+xml" title="changgunyee"
+    href="/feed.xml">
+  <style>
+    body {
+      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">changgunyee</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/develop">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+<header class="masthead"
+  style="background-image: url('/img/boost-course.jpg')">
+  
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>부스트 코스(웹) PROJ4-2</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">이창권</a>
+              on August 27, 2019
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 mx-auto">
+
+        <p>부스트 코스 proj4-2를 진행하였습니다.</p>
+
+<p>이번에는 네이버 예약 서비스 상세페이지의 프론트엔드를 개발하였습니다.<br />
+개발해야하는 파트는 총 3부분으로 display item의 정보를 보여주는 메인 상세페이지와 해당 display item의 모든 한줄평을 볼 수 있는 한줄평 상세페이지 그리고 메인 상세페이지 상단의 타이틀영역 배경이미지 슬라이딩입니다.</p>
+
+<h2 id="메인-상세페이지detail-view와-한줄평-상세페이지comment-view">메인 상세페이지(detail view)와 한줄평 상세페이지(comment view)</h2>
+
+<p>메인 페이지에서 display item을 선택하면 해당 item의 메인 상세페이지로 이동하게 됩니다. 이때 data를 상세페이지에 렌더링합니다.<br />
+원래 렌더링을 순수하고 javascript만 사용해서 하였었습니다. 하지만 리뷰어님께서 Spring MVC를 배우는 과정이니 jsp를 쓰라고 말씀해주셔서 proj3-2까지 다 jsp로 수정하였습니다.</p>
+
+<p>이번 과정에 EL과 JSTL의 강의도 있었던 만큼, 적극적으로 EL과 JSTL을 사용하였습니다.</p>
+
+<ol>
+  <li>EL(expression language)</li>
+</ol>
+
+<p>EL을 사용하면 좀 더 편리하게 변수를 JSP에서 사용할 수 있습니다.<br />
+기본 사용법은 다음과 같습니다.</p>
+
+<p><img src="/img/2019-08-27/el.png" /></p>
+
+<p>특히 객체안의 멤버 변수에 접근할 때에도 <code class="highlighter-rouge">${&lt;표현1&gt;.&lt;표현2&gt;}</code>와 같이 바로 접근할 수 있을 만큼 편리합니다.</p>
+
+<ol>
+  <li>JSTL(JSP standard tag library)</li>
+</ol>
+
+<p>프론트 개발자가 JSP를 수정하는데, JSP 안에 자바코드와 HTML코드가 섞여 있다면 수정할 때 굉장히 어려움을 느끼게 될 가능성이 큽니다.<br />
+이런 문제를 해결하기 위해서 등장한 것이 JSTL입니다.<br />
+JSTL을 이용하면 태그형식으로 조건문, 반복문 등을 사용할 수 있습니다.<br />
+그리고, 앞에서 배운 EL과 연동하면 더욱 강력하게 사용 가능합니다.</p>
+
+<div class="language-jsp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;%@ taglib </span><span class="na">prefix=</span><span class="s">"c"</span><span class="na"> uri=</span><span class="s">"http://java.sun.com/jsp/jstl/core"</span> <span class="nt">%&gt;</span>
+</code></pre></div></div>
+
+<p>위와 같이 jsp파일에 가장 주로 쓰는 core library tag를 추가하고 아래와 같이 사용할 수 있습니다.</p>
+
+<p><img src="/img/2019-08-27/jstl.png" /></p>
+
+<p>core taglibrary뿐만 아니라 다양한 jstl tag를 사용할 수 있는데 이번에 평균 출력시 소수점 1자리까지만 출력해야하고, 날짜를 <code class="highlighter-rouge">2019.01.29</code>와 같이 출력해야하기 때문에 fmt library를 사용하였습니다.</p>
+
+<p>밑과 같이 사용하였습니다.</p>
+
+<div class="language-jsp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;%@ taglib </span><span class="na">prefix=</span><span class="s">"fmt"</span><span class="na"> uri=</span><span class="s">"http://java.sun.com/jsp/jstl/fmt"</span> <span class="nt">%&gt;</span>
+<span class="nt">&lt;fmt:formatNumber </span><span class="na">value=</span><span class="s">"</span><span class="si">${</span><span class="n">averageScore</span><span class="si">}</span><span class="s">"</span><span class="na"> pattern=</span><span class="s">".0"</span><span class="nt">&gt;&lt;/fmt:formatNumber&gt;</span>
+<span class="nt">&lt;fmt:formatDate </span><span class="na">value=</span><span class="s">"</span><span class="si">${</span><span class="n">comment</span><span class="o">.</span><span class="na">reservationDate</span><span class="si">}</span><span class="s">"</span><span class="na"> pattern=</span><span class="s">"yyyy.MM.dd"</span><span class="nt">&gt;&lt;/fmt:formatDate&gt;</span>
+</code></pre></div></div>
+
+<p>위와 같이 EL과 JSTL을 사용하여 detail.jsp와 comment.jsp를 구성하였습니다.<br />
+또한 펼쳐보기도 JS와 css class를 사용하여 클릭하면 close class를 추가, 삭제하는 방식으로 구현하였고 상세정보와 오시는길 탭 또한 버블링을 이용하여 클릭 시 렌더링해주었습니다.</p>
+
+<h2 id="타이틀영역-배경이미지-슬라이딩">타이틀영역 배경이미지 슬라이딩</h2>
+
+<p>슬라이딩 구현시 원래는 css의 animation을 사용하여 구현하였으나 평가 기준표에 transform과 translate를 사용하라고 하여 고생하였습니다.ㅠㅠ<br />
+특히 css의 left와 transform 속성을 잘 조절해주어야 하는데, 그럴려면 어쩔수없이 <code class="highlighter-rouge">setTimeout()</code>을 사용할 수 밖에 없었습니다.(<strong>맞는건지 모르겠습니다</strong>)</p>
+
+<p>시현 결과입니당.</p>
+
+<p><img src="/img/2019-08-27/simulation.gif" style="width:40%;" /></p>
+
+<p>프로젝트를 통과한 모습입니다.</p>
+
+<p><img src="/img/2019-08-27/complete.png" /></p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left"
+            href="/boost-course/2019/08/20/boostCourse(web)-proj4-1.html" data-toggle="tooltip"
+            data-placement="top" title="부스트 코스(웹) PROJ4-1">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+
+        </div>
+        
+        <div id="disqus_thread"></div>
+          <script>
+
+          /**
+          *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+          *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+          /*
+          var disqus_config = function () {
+          this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+          this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+          };
+          */
+          (function() { // DON'T EDIT BELOW THIS LINE
+          var d = document, s = d.createElement('script');
+          s.src = 'https://https-changgunyee-github-io.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+          })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+        
+        </div>
+      </div>
+    </div>
+      
+  <script id="dsq-count-scr" src="//https-changgunyee-github-io.disqus.com/count.js" async></script>
+  <style>
+    img{
+      display:block;
+      margin:0px auto;
+      width:80%;
+    }
+    #disqus_thread{
+      margin-top:2rem;
+    }
+  </style>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="mailto:minyoung403@naver.com">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="far fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/changgunyee">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://instagram.com/char_quen">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          <li class="list-inline-item">
+              <a href="https://www.buymeacoffee.com/changgunyee" target="_blank">
+                <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee"style="height: auto !important;width: auto !important;display:inline-block;">
+              </a>
+          </li>
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; 이창권 2019</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145057839-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-145057839-1');
+</script>
+
+</body>
+
+</html>
