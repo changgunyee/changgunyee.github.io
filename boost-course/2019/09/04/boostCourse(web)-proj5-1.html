@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    부스트 코스(웹) PROJ5-1 - changgunyee
+    
+  </title>
+
+  <meta name="description"
+    content="부스트 코스 proj5-1를 진행하였습니다. 네이버 예약 서비스의 예약 관련 페이지들을 위한 Controller와 API를 위한 Controller를 개발하였습니다. 예매하기 페이지와 예약자 이메일 입력 페이지, 예약확인 페이지로 총 3개와 더불어 예약정보 조회를 위한 /api/r...">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-7578104907913978",
+            enable_page_level_ads: true
+        });
+  </script>
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+    type='text/css'>
+  <link
+    href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+    rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/fontawesome-free/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/custom.css">
+  <link rel="canonical" href="https://changgunyee.github.io/boost-course/2019/09/04/boostCourse(web)-proj5-1.html">
+  <link rel="alternate" type="application/rss+xml" title="changgunyee"
+    href="/feed.xml">
+  <style>
+    body {
+      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">changgunyee</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/develop">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+<header class="masthead"
+  style="background-image: url('/img/boost-course.jpg')">
+  
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>부스트 코스(웹) PROJ5-1</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">이창권</a>
+              on September 04, 2019
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 mx-auto">
+
+        <p>부스트 코스 proj5-1를 진행하였습니다.</p>
+
+<p>네이버 예약 서비스의 예약 관련 페이지들을 위한 Controller와 API를 위한 Controller를 개발하였습니다.<br />
+예매하기 페이지와 예약자 이메일 입력 페이지, 예약확인 페이지로 총 3개와 더불어 예약정보 조회를 위한 <code class="highlighter-rouge">/api/reservations</code>와 예약하기 <code class="highlighter-rouge">/api/reservations</code>, 예약취소하기 <code class="highlighter-rouge">/api/reservations/{reservationId}</code> 총 3개의 API까지 개발하였습니다.<br />
+이번에는 <code class="highlighter-rouge">select</code>문 외에 <code class="highlighter-rouge">update</code>문과 <code class="highlighter-rouge">delete</code>,<code class="highlighter-rouge">insert</code>문을 사용한다는 것을 제외하면 기본적인 Controller작성은 proj3-1이나 proj4-1과 비슷하였습니다.<br />
+Controller작성과 더불어 이번 과제에서는 특별히 <code class="highlighter-rouge">session</code>이라는 것을 사용하였는데 이와 비슷한 기능을 하는 <code class="highlighter-rouge">cookie</code>와 함께 알아 보도록 하겠습니다.</p>
+
+<h2 id="controller">Controller</h2>
+<p>사실 proj4-1에서 잘못한 점이 있습니다.<br />
+<code class="highlighter-rouge">select</code>문만을 사용하는 dao함수들을 사용할 때는 굳이 <code class="highlighter-rouge">@Transactional</code>을 사용할 필요가 없습니다.<br />
+왜냐하면 데이터베이스의 무결성을 해치는 것도 아닐 뿐더러 함수가 중간에 에러가 난다 하더라도 이상한 값을 반환하거나 하진 않기 때문입니다.(저는 2개이상의 sql문을 사용하면 무조건 사용해야하는 줄 알았습니다.)<br />
+이번에는 예약하기의 기능을 하는 service 함수를 위해서는 <code class="highlighter-rouge">reservation_info</code>테이블에도 <code class="highlighter-rouge">insert</code>를 해야하고, <code class="highlighter-rouge">reservation_info_price</code>테이블에도 <code class="highlighter-rouge">insert</code>해야하기 때문에 이와같이 db를 변경하는 sql문들을 2개이상 사용할 때 <code class="highlighter-rouge">@Transactional</code>을 사용해야 합니다.<br />
+@Transactional annotation을 사용하면 함수가 실행되거나, 중간에 문제가 생기면 아예 함수를 실행하기 전으로 rollback하게끔 도와줍니다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@Override</span>
+    <span class="nd">@Transactional</span>
+    <span class="kd">public</span> <span class="nc">ReservationResponse</span> <span class="nf">reserveTicket</span><span class="o">(</span><span class="nc">ReservationParam</span> <span class="n">reservationParam</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">reservation_info</span><span class="err">테이블에</span> <span class="n">insert</span>
+        <span class="n">reservation_info_price</span><span class="err">테이블에</span> <span class="n">insert</span><span class="c1">//2개의 insert문 사용으로  @Transactional추가</span>
+</code></pre></div></div>
+
+<h2 id="session과-cookie">Session과 Cookie</h2>
+<p>쿠키와 세션의 가장 큰 차이점이라 한다면 쿠키는 클라이언트에 정보를 저장해두는 기술이고, 세션은 서버에 저장을 한다는 점입니다.<br />
+그림으로 이해하여 봅시다!</p>
+
+<ol>
+  <li>cookie</li>
+</ol>
+
+<p><img src="/img/2019-09-04/cookie1.png" /></p>
+
+<p><img src="/img/2019-09-04/cookie2.png" /></p>
+
+<p>쿠키는 위와 같이 웹 클라이언트가 서버에 요청을 하면 서버에서 쿠키를 만들어 응답에 같이 보내주는 형식을 취합니다.<br />
+그 후에는 클라이언트에서 요청을 보낼 때 쿠키와 같이 보내고, 서버에서는 받은 쿠키를 확인하여 정보를 쿠키에 맞게 보냅니다.<br />
+단 저장된 정보가 클라이언트에 있으므로, 사용자나 시스템이 쿠키를 들여다볼 수 있다는 단점이 있습니다.</p>
+
+<ol>
+  <li>session</li>
+</ol>
+
+<p><img src="/img/2019-09-04/session1.png" /></p>
+
+<p><img src="/img/2019-09-04/session2.png" /></p>
+
+<p>세션은 결국 쿠키를 사용한 기술입니다.<br />
+단 서버에서 보관한다는 점에서 다릅니다.<br />
+클라이언트가 요청을 보내면 서버에서 세션키와 세션을 생성해 세션키를 담은 cookie를 응답에 포함시켜 보내줍니다.<br />
+이후 클라이언트가 요청을 했을 때는 세션키를 담은 쿠키를 서버에 보내 서버에서 세션키를 왁인하여 저장된 정보를 응답해줍니다.</p>
+
+<p>쿠키를 사용하면 사용자나 시스템이 들여다 볼수도 있기 때문에, 중요한 정보를 담지 못합니다. 하지만 세션을 사용하면 저장소가 서버에 있기 때문에, 어떤 정보도 세션에 담아둘 수 있는 장점이 있습니다.(단 서버가 힘들어 하겠죠?)</p>
+
+<p>Spring에서 session을 사용하는 법을 익혀봅시다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@Controller</span>
+    <span class="nd">@SessionAttributes</span><span class="o">(</span><span class="s">"user"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ReservationController</span> <span class="o">{</span>
+
+        <span class="nd">@GetMapping</span><span class="o">(</span><span class="n">path</span> <span class="o">=</span> <span class="s">"/myreservation"</span><span class="o">)</span>
+        <span class="kd">public</span> <span class="nc">String</span> <span class="nf">renderMyReservationPage</span><span class="o">(</span><span class="nd">@ModelAttribute</span><span class="o">(</span><span class="s">"user"</span><span class="o">)</span> <span class="nc">User</span> <span class="n">user</span><span class="o">,</span> <span class="nc">ModelMap</span> <span class="n">modelMap</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">user</span><span class="err">의</span> <span class="n">email</span><span class="err">을</span> <span class="err">참조해</span> <span class="n">reservation_info</span><span class="err">검색</span><span class="o">!</span>
+        <span class="o">}</span>
+
+        <span class="nd">@ModelAttribute</span><span class="o">(</span><span class="s">"user"</span><span class="o">)</span>
+        <span class="kd">public</span> <span class="nc">User</span> <span class="nf">setUser</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">User</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<p>첫 번째로 다음과 같이 컨트롤러에 <code class="highlighter-rouge">@SessionAttributes</code> annotation을 추가하여 줍니다.<br />
+<code class="highlighter-rouge">@SessionAttributes</code> 파라미터로 지정된 이름과 같은 이름이 <code class="highlighter-rouge">@ModelAttribute</code>에 지정되어 있을 경우 메소드가 반환되는 값은 세션에 저장됩니다.
+이후 다른 함수에서 <code class="highlighter-rouge">@ModelAttribute</code>를 parameter로 사용하면 session에서 해당 이름을 가진 객체를 가져와 사용할 수 있습니다.(간단하죠?)</p>
+
+<p>함수 내 parameter로 <code class="highlighter-rouge">@ModelAttribute</code>대신 <code class="highlighter-rouge">@SessionAttribute</code>를 사용할 수도 있습니다.</p>
+
+<p>개인적으로 강의 중에 배운 인터셉터나 아규먼트 리졸버도 공부한 만큼 사용해보고 싶었는데 프로젝트의 기획서나 명세에 없어서 아쉬웠습니다.</p>
+
+<p>다음에 도전할 기회가 있었으면 좋겠습니당.~~~</p>
+
+<p><img src="/img/2019-09-04/complete.png" /></p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left"
+            href="/boost-course/2019/08/27/boostCourse(web)-proj4-2.html" data-toggle="tooltip"
+            data-placement="top" title="부스트 코스(웹) PROJ4-2">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+
+        </div>
+        
+        <div id="disqus_thread"></div>
+          <script>
+
+          /**
+          *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+          *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+          /*
+          var disqus_config = function () {
+          this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+          this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+          };
+          */
+          (function() { // DON'T EDIT BELOW THIS LINE
+          var d = document, s = d.createElement('script');
+          s.src = 'https://https-changgunyee-github-io.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+          })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+        
+        </div>
+      </div>
+    </div>
+      
+  <script id="dsq-count-scr" src="//https-changgunyee-github-io.disqus.com/count.js" async></script>
+  <style>
+    img{
+      display:block;
+      margin:0px auto;
+      width:80%;
+    }
+    #disqus_thread{
+      margin-top:2rem;
+    }
+  </style>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="mailto:minyoung403@naver.com">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="far fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/changgunyee">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://instagram.com/char_quen">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          <li class="list-inline-item">
+              <a href="https://www.buymeacoffee.com/changgunyee" target="_blank">
+                <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee"style="height: auto !important;width: auto !important;display:inline-block;">
+              </a>
+          </li>
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; 이창권 2019</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145057839-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-145057839-1');
+</script>
+
+</body>
+
+</html>
