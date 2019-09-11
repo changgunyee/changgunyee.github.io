@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    부스트 코스(웹) PROJ5-2 - changgunyee
+    
+  </title>
+
+  <meta name="description"
+    content="네이버 예약 서비스에서 예약 페이지, 이메일 로그인 페이지, 예매 내역 확인 페이지까지 총 3가지의 예약 기능을 위한 페이지들을 개발하였습니다. 이번에 프런트 자바스크립트에서의 중요한 부분은 정규표현식, UI기능 별로 묶어 modular하게 개발로 총 2가지였습니다. 정규표현식 문...">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-7578104907913978",
+            enable_page_level_ads: true
+        });
+  </script>
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+    type='text/css'>
+  <link
+    href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+    rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/fontawesome-free/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/custom.css">
+  <link rel="canonical" href="https://changgunyee.github.io/boost-course/2019/09/11/boostCourse(web)-proj5-2.html">
+  <link rel="alternate" type="application/rss+xml" title="changgunyee"
+    href="/feed.xml">
+  <style>
+    body {
+      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">changgunyee</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/develop">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+<header class="masthead"
+  style="background-image: url('/img/boost-course.jpg')">
+  
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>부스트 코스(웹) PROJ5-2</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">이창권</a>
+              on September 11, 2019
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 mx-auto">
+
+        <p>네이버 예약 서비스에서 예약 페이지, 이메일 로그인 페이지, 예매 내역 확인 페이지까지 총 3가지의 예약 기능을 위한 페이지들을 개발하였습니다.</p>
+
+<p>이번에 프런트 자바스크립트에서의 중요한 부분은 정규표현식, UI기능 별로 묶어 modular하게 개발로 총 2가지였습니다.</p>
+
+<h3 id="정규표현식">정규표현식</h3>
+
+<p>문자열의 특정 패턴을 찾을 수 있는 문법입니다.<br />
+패턴을 찾아서 추출, 삭제, 치환 등의 문자열 조작을 할 수 있습니다.<br />
+주로 이메일, 주소, 전화번호 등의 규칙 검사에 사용됩니다.<br />
+정규표현식 사용법에 대해서는 다음의 위키 사이트에서 학습하였습니다.<br />
+<a href="https://ko.wikipedia.org/wiki/%EC%A0%95%EA%B7%9C_%ED%91%9C%ED%98%84%EC%8B%9D">https://ko.wikipedia.org/wiki/%EC%A0%95%EA%B7%9C_%ED%91%9C%ED%98%84%EC%8B%9D</a></p>
+
+<p>이번에 전화번호와 이메일 Input에 규칙검사를 적용하였습니다.<br />
+자바스크립트에서 정규표현식에 사용할 수 있는 함수가 몇개 존재합니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Function</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">exec</code></td>
+      <td>대응되는 문자열을 찾는 RegExp 메소드입니다. 정보를 가지고 있는 배열을 반환합니다.    대응되는 문자열을 찾지 못했다면 null을 반환합니다.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">test</code></td>
+      <td>대응되는 문자열이 있는지 검사하는 RegExp 메소드 입니다. true 나 false를 반환합니다.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">match</code></td>
+      <td>대응되는 문자열을 찾는 RegExp 메소드입니다. 정보를 가지고 있는 배열을 반환합니다. 대응되는 문자열을 찾지 못했다면 null을 반환합니다.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">search</code></td>
+      <td>대응되는 문자열이 있는지 검사하는 String 메소드 입니다. 대응된 부분의 인덱스를 반환합니다. 대응되는 문자열을 찾지 못했다면 -1을 반환합니다.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">replace</code></td>
+      <td>대응되는 문자열을 찾아 다른 문자열로 치환하는 String 메소드입니다.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">split</code></td>
+      <td>정규식 혹은 문자열로 대상 문자열을 나누어 배열로 반환하는 String 메소드입니다.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>저는 값을 찾아낼 필요 없이 검사만 하면 되므로 <code class="highlighter-rouge">test</code>함수를 다음과 같이 사용하였습니다.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//이메일 규칙검사</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="sr">/^</span><span class="se">[</span><span class="sr">0-9a-zA-Z</span><span class="se">]([</span><span class="sr">-_.</span><span class="se">]?[</span><span class="sr">0-9a-zA-Z</span><span class="se">])</span><span class="sr">*@</span><span class="se">[</span><span class="sr">0-9a-zA-Z</span><span class="se">]([</span><span class="sr">-_.</span><span class="se">]?[</span><span class="sr">0-9a-zA-Z</span><span class="se">])</span><span class="sr">*.</span><span class="se">[</span><span class="sr">a-zA-Z</span><span class="se">]{2,3}</span><span class="sr">$/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">inputValue</span><span class="p">)))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="객체화를-통한-modular-구현">객체화를 통한 Modular 구현</h3>
+
+<p>이를 위한 평가기준표는 다음과 같습니다.</p>
+<ul>
+  <li>자주 사용되는 함수를 객체형태로 묶어서 사용해야 한다.</li>
+  <li>UI 별로 기능을 묶어서 객체화된 모듈을 만들어야 하며, prototype방식을 적용해야 한다.
+…(<del>당최 무슨 소리인지</del>)</li>
+</ul>
+
+<p>저도 처음에 보고 많이 혼동되었습니다.<br />
+그러나 마스터님들이 의도한 대로 최대한 구현하려고 노력하였고 완성하고 파일 구조를 보니 한눈에 어떤 파일이 어떤 용도인지 알 수 있었고, 가독성과 재사용성이 눈에 띄게 늘었습니다.</p>
+
+<p>예를 들어 이메일 입력 UI에 대해서 살펴보도록 하겠습니다.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span><span class="nx">addClass</span><span class="p">,</span> <span class="nx">removeClass</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">./Constants.js</span><span class="dl">"</span><span class="p">;</span><span class="c1">//자체 class추가 함수 import</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">Email</span><span class="p">(</span><span class="nx">emailElement</span><span class="p">,</span> <span class="nx">warningElement</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">emailElement</span> <span class="o">=</span> <span class="nx">emailElement</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">warningElement</span> <span class="o">=</span> <span class="nx">warningElement</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">registerEvent</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="nx">Email</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">registerEvent</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="err">이메일</span><span class="nx">UI</span><span class="err">에</span> <span class="err">이벤트</span> <span class="err">등록</span>
+    <span class="p">},</span>
+    <span class="na">check</span>        <span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="err">이메일</span> <span class="err">규칙</span> <span class="err">검사</span>
+    <span class="p">},</span>
+    <span class="p">....</span> <span class="err">다른</span> <span class="err">이메일</span> <span class="nx">UI</span><span class="err">만을</span> <span class="err">위한</span> <span class="err">함수를</span> <span class="err">추가하여</span> <span class="err">사용가능</span> <span class="err">합니다</span><span class="p">.</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>위와 같이 Email UI만을 위한 객체와 파일을 만듭니다. prototype을 이용해 생성자 패턴으로 <code class="highlighter-rouge">Email</code> module을 만들었습니다.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Email</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">./module/Email.js</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">"</span><span class="s2">DOMContentLoaded</span><span class="dl">"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">emailElement</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="dl">'</span><span class="s1">#email</span><span class="dl">'</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">emailWarningElement</span> <span class="o">=</span> <span class="nx">emailElement</span><span class="p">.</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="dl">'</span><span class="s1">.inline_form .warning_msg</span><span class="dl">'</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">email</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Email</span><span class="p">(</span><span class="nx">emailElement</span><span class="p">,</span> <span class="nx">emailWarningElement</span><span class="p">,</span> <span class="nx">activateReserveBtn</span><span class="p">);</span>
+    <span class="p">...</span>
+    <span class="p">...</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>위와 같이 예약하기 페이지에서 <code class="highlighter-rouge">Email</code>모듈을 받아와 객체를 생성하기만 하면 알아서 event 등록부터 필요한 기능을 수행합니다.<br />
+이후 어떤 페이지에서 이메일 UI를 필요로 해도 <code class="highlighter-rouge">Email</code>모듈만 받아와 객체를 생성해주면 됩니다.<br />
+물론 프런트엔드 프레임워크인 Vue나 React를 사용하면 애초에 개발을 Componenet단위로 하기 때문에 저절로 위와 같이 개발하게 됩니다.(이러한 형식의 개발은 재사용성이나 가독성을 엄청 끌어올리기 때문에 정말 좋다고 생각합니다.)<br />
+또한 javascript는 es6의 class를 사용한다 하더라도 내부적으로 결국 prototype을 사용하기 때문에 prototype을 제대로 이해해야합니다.<br />
+밑의 링크를 통해 공부하면 굉장히 좋습니다.<br />
+<a href="https://poiemaweb.com/js-prototype">https://poiemaweb.com/js-prototype</a></p>
+
+<p>완성본 시뮬레이션 영상입니다.</p>
+
+<p><img src="/img/2019-09-11/simulation.gif" style="width:50%;" /></p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left"
+            href="/boost-course/2019/09/04/boostCourse(web)-proj5-1.html" data-toggle="tooltip"
+            data-placement="top" title="부스트 코스(웹) PROJ5-1">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+
+        </div>
+        
+        <div id="disqus_thread"></div>
+          <script>
+
+          /**
+          *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+          *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+          /*
+          var disqus_config = function () {
+          this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+          this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+          };
+          */
+          (function() { // DON'T EDIT BELOW THIS LINE
+          var d = document, s = d.createElement('script');
+          s.src = 'https://https-changgunyee-github-io.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+          })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+        
+        </div>
+      </div>
+    </div>
+      
+  <script id="dsq-count-scr" src="//https-changgunyee-github-io.disqus.com/count.js" async></script>
+  <style>
+    img{
+      display:block;
+      margin:0px auto;
+      width:80%;
+    }
+    #disqus_thread{
+      margin-top:2rem;
+    }
+  </style>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="mailto:minyoung403@naver.com">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="far fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/changgunyee">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://instagram.com/char_quen">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          <li class="list-inline-item">
+              <a href="https://www.buymeacoffee.com/changgunyee" target="_blank">
+                <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee"style="height: auto !important;width: auto !important;display:inline-block;">
+              </a>
+          </li>
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; 이창권 2019</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145057839-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-145057839-1');
+</script>
+
+</body>
+
+</html>
