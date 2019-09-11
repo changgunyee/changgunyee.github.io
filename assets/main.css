@@ -157,30 +157,27 @@ header.masthead {
   header.masthead .site-heading {
     padding: 200px 0 150px;
     color: white; }
-    @media only screen and (min-width: 768px) {
-      header.masthead .page-heading,
-      header.masthead .post-heading,
-      header.masthead .site-heading {
-        padding: 200px 0; } }
+  @media only screen and (max-width: 450px) {
+    header.masthead .page-heading,
+    header.masthead .post-heading,
+    header.masthead .site-heading {
+      padding: 150px 0 100px;
+      color: white; } }
   header.masthead .page-heading,
   header.masthead .site-heading {
     text-align: center; }
     header.masthead .page-heading h1,
     header.masthead .site-heading h1 {
-      font-size: 50px;
+      font-size: 5rem;
       margin-top: 0; }
     header.masthead .page-heading .subheading,
     header.masthead .site-heading .subheading {
-      font-size: 24px;
+      font-size: 1.5rem;
       font-weight: 300;
       line-height: 1.1;
       display: block;
       margin: 10px 0 0;
       font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; }
-    @media only screen and (min-width: 768px) {
-      header.masthead .page-heading h1,
-      header.masthead .site-heading h1 {
-        font-size: 80px; } }
   header.masthead .post-heading h1 {
     font-size: 35px; }
   header.masthead .post-heading .meta,
@@ -188,7 +185,7 @@ header.masthead {
     line-height: 1.1;
     display: block; }
   header.masthead .post-heading .subheading {
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 600;
     margin: 10px 0 30px;
     font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; }
@@ -231,7 +228,7 @@ header.masthead {
       color: #0085A1; }
 @media only screen and (min-width: 768px) {
   .post-preview > a > .post-title {
-    font-size: 36px; } }
+    font-size: 2rem; } }
 
 .floating-label-form-group {
   font-size: 14px;

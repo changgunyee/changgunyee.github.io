@@ -1,6 +1,6 @@
 @media screen and (max-width:415px ){
   html{
-    font-size:14px;
+    font-size:12px;
   }
   .masthead{
       margin-bottom:0px !important;
@@ -9,7 +9,7 @@
     padding:0rem;
   }
   .category-title{
-    font-size:1.4rem !important;
+    font-size:1.2rem !important;
   }
   .category-title-container{
     padding:0rem;
@@ -21,6 +21,6 @@
   }
 }
 
-.category-title{
-  font-size:1.5rem;
+html{
+  font-size:14px;
 }
